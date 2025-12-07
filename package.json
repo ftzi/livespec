@@ -1,0 +1,30 @@
+{
+  "name": "@ftzi/livespec",
+  "version": "0.1.0",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.9.3"
+  },
+  "bin": {
+    "livespec": "./src/index.ts"
+  },
+  "description": "Living specification management for AI-native development",
+  "keywords": [
+    "livespec",
+    "specs",
+    "ai",
+    "documentation",
+    "specifications"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "bun test"
+  },
+  "type": "module",
+  "dependencies": {
+    "@clack/prompts": "0.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

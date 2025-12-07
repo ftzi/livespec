@@ -1,0 +1,262 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+export type InitOptions = {
+	cwd?: string
+	projectName?: string
+	skipExisting?: boolean
+	injectClaudeMd?: boolean
+	injectAgentsMd?: boolean
+}
+
+export type InitResult = {
+	created: string[]
+	skipped: string[]
+	updated: string[]
+	errors: string[]
+}
+
+type WriteFileOptions = {
+	filePath: string
+	content: string
+	skipExisting: boolean
+	result: InitResult
+}
+
+type InjectSectionOptions = {
+	filePath: string
+	skipExisting: boolean
+	result: InitResult
+}
+
+function getTemplatePath(templateName: string): string {
+	return join(__dirname, "..", "templates", templateName)
+}
+
+function readTemplate(templateName: string): string {
+	return readFileSync(getTemplatePath(templateName), "utf-8")
+}
+
+/**
+ * Initialize livespec in the given directory.
+ */
+export function init(options: InitOptions = {}): InitResult {
+	const {
+		cwd = process.cwd(),
+		projectName = "my-project",
+		skipExisting = true,
+		injectClaudeMd = false,
+		injectAgentsMd = false,
+	} = options
+
+	const result: InitResult = {
+		created: [],
+		skipped: [],
+		updated: [],
+		errors: [],
+	}
+
+	const livespecDir = join(cwd, "livespec")
+	const projectsDir = join(livespecDir, "projects")
+	const projectDir = join(projectsDir, projectName)
+	const plansDir = join(livespecDir, "plans")
+	const activePlansDir = join(plansDir, "active")
+	const archivedPlansDir = join(plansDir, "archived")
+
+	// Create directories
+	const directories = [livespecDir, projectsDir, projectDir, plansDir, activePlansDir, archivedPlansDir]
+
+	for (const dir of directories) {
+		if (!existsSync(dir)) {
+			try {
+				mkdirSync(dir, { recursive: true })
+				result.created.push(dir)
+			} catch (_error) {
+				result.errors.push(`Failed to create directory: ${dir}`)
+			}
+		}
+	}
+
+	// Copy AGENTS.md template
+	const agentsMdPath = join(livespecDir, "AGENTS.md")
+	writeFileIfNotExists({ filePath: agentsMdPath, content: readTemplate("AGENTS.md"), skipExisting, result })
+
+	// Copy manifest.md template
+	const manifestPath = join(livespecDir, "manifest.md")
+	writeFileIfNotExists({ filePath: manifestPath, content: readTemplate("manifest.md"), skipExisting, result })
+
+	// Copy project.md template
+	const projectMdPath = join(projectDir, "project.md")
+	writeFileIfNotExists({
+		filePath: projectMdPath,
+		content: readTemplate("project.md"),
+		skipExisting,
+		result,
+	})
+
+	// Optionally inject into root CLAUDE.md
+	if (injectClaudeMd) {
+		const claudeMdPath = join(cwd, "CLAUDE.md")
+		injectLivespecSection({ filePath: claudeMdPath, skipExisting, result })
+	}
+
+	// Optionally inject into root AGENTS.md
+	if (injectAgentsMd) {
+		const rootAgentsMdPath = join(cwd, "AGENTS.md")
+		injectLivespecSection({ filePath: rootAgentsMdPath, skipExisting, result })
+	}
+
+	return result
+}
+
+function writeFileIfNotExists({ filePath, content, skipExisting, result }: WriteFileOptions): void {
+	if (existsSync(filePath)) {
+		if (skipExisting) {
+			result.skipped.push(filePath)
+		} else {
+			try {
+				writeFileSync(filePath, content, "utf-8")
+				result.updated.push(filePath)
+			} catch (_error) {
+				result.errors.push(`Failed to write file: ${filePath}`)
+			}
+		}
+	} else {
+		try {
+			writeFileSync(filePath, content, "utf-8")
+			result.created.push(filePath)
+		} catch (_error) {
+			result.errors.push(`Failed to create file: ${filePath}`)
+		}
+	}
+}
+
+function injectLivespecSection({ filePath, skipExisting, result }: InjectSectionOptions): void {
+	const livespecSection = readTemplate("CLAUDE-SECTION.md")
+	const startMarker = "<!-- LIVESPEC:START -->"
+	const endMarker = "<!-- LIVESPEC:END -->"
+
+	if (existsSync(filePath)) {
+		if (skipExisting) {
+			const content = readFileSync(filePath, "utf-8")
+			if (content.includes(startMarker)) {
+				result.skipped.push(filePath)
+				return
+			}
+		}
+
+		try {
+			let content = readFileSync(filePath, "utf-8")
+
+			if (content.includes(startMarker)) {
+				// Replace existing section
+				const startIndex = content.indexOf(startMarker)
+				const endIndex = content.indexOf(endMarker)
+
+				if (startIndex !== -1 && endIndex !== -1) {
+					content = content.slice(0, startIndex) + livespecSection + content.slice(endIndex + endMarker.length)
+					writeFileSync(filePath, content, "utf-8")
+					result.updated.push(filePath)
+				}
+			} else {
+				// Prepend livespec section
+				content = `${livespecSection}\n\n${content}`
+				writeFileSync(filePath, content, "utf-8")
+				result.updated.push(filePath)
+			}
+		} catch (_error) {
+			result.errors.push(`Failed to update: ${filePath}`)
+		}
+	} else {
+		// File doesn't exist - don't create it, just skip
+		// (we only inject into existing files)
+		result.skipped.push(filePath)
+	}
+}
+
+/**
+ * Check if livespec is already initialized in a directory.
+ */
+export function isInitialized(cwd: string = process.cwd()): boolean {
+	const livespecDir = join(cwd, "livespec")
+	const agentsMdPath = join(livespecDir, "AGENTS.md")
+	return existsSync(livespecDir) && existsSync(agentsMdPath)
+}
+
+export type UpdateBaseFilesOptions = {
+	cwd?: string
+	injectClaudeMd?: boolean
+	injectAgentsMd?: boolean
+}
+
+/**
+ * Update base files (AGENTS.md, manifest.md) and optionally update root CLAUDE.md/AGENTS.md sections.
+ */
+export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResult {
+	const { cwd = process.cwd(), injectClaudeMd = false, injectAgentsMd = false } = options
+
+	const result: InitResult = {
+		created: [],
+		skipped: [],
+		updated: [],
+		errors: [],
+	}
+
+	const livespecDir = join(cwd, "livespec")
+
+	// Update livespec/AGENTS.md
+	const livespecAgentsMdPath = join(livespecDir, "AGENTS.md")
+	updateFileIfChanged({ filePath: livespecAgentsMdPath, newContent: readTemplate("AGENTS.md"), result })
+
+	// Update livespec/manifest.md
+	const manifestPath = join(livespecDir, "manifest.md")
+	updateFileIfChanged({ filePath: manifestPath, newContent: readTemplate("manifest.md"), result })
+
+	// Update root CLAUDE.md section
+	if (injectClaudeMd) {
+		const claudeMdPath = join(cwd, "CLAUDE.md")
+		injectLivespecSection({ filePath: claudeMdPath, skipExisting: false, result })
+	}
+
+	// Update root AGENTS.md section
+	if (injectAgentsMd) {
+		const rootAgentsMdPath = join(cwd, "AGENTS.md")
+		injectLivespecSection({ filePath: rootAgentsMdPath, skipExisting: false, result })
+	}
+
+	return result
+}
+
+type UpdateFileOptions = {
+	filePath: string
+	newContent: string
+	result: InitResult
+}
+
+function updateFileIfChanged({ filePath, newContent, result }: UpdateFileOptions): void {
+	if (!existsSync(filePath)) {
+		try {
+			writeFileSync(filePath, newContent, "utf-8")
+			result.created.push(filePath)
+		} catch (_error) {
+			result.errors.push(`Failed to create file: ${filePath}`)
+		}
+		return
+	}
+
+	const currentContent = readFileSync(filePath, "utf-8")
+	if (currentContent === newContent) {
+		result.skipped.push(filePath)
+		return
+	}
+
+	try {
+		writeFileSync(filePath, newContent, "utf-8")
+		result.updated.push(filePath)
+	} catch (_error) {
+		result.errors.push(`Failed to update file: ${filePath}`)
+	}
+}
