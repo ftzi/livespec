@@ -3,7 +3,8 @@
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import * as p from "@clack/prompts"
-import { init, isInitialized, updateBaseFiles } from "./init"
+import { type AITool, detectInstalledTools, init, isInitialized, updateBaseFiles } from "./init"
+import { AI_TOOLS, ALL_TOOLS } from "./tools"
 
 const LIVESPEC_MARKER = "<!-- LIVESPEC:START -->"
 
@@ -76,9 +77,11 @@ Options:
 
 		// Update mode - update root files that have the livespec section
 		const { claudeMdHasSection, agentsMdHasSection } = detectLivespecSections()
+		const installedTools = detectInstalledTools()
 		const result = updateBaseFiles({
 			injectClaudeMd: claudeMdHasSection,
 			injectAgentsMd: agentsMdHasSection,
+			tools: installedTools,
 		})
 
 		const updated = result.updated.length
@@ -90,6 +93,7 @@ Options:
 	// Fresh init
 	let injectClaudeMd = hasClaudeMd
 	let injectAgentsMd = hasAgentsMd
+	let selectedTools: AITool[] = []
 
 	if (!skipPrompts && (hasClaudeMd || hasAgentsMd)) {
 		const options: Array<{ value: string; label: string }> = []
@@ -97,7 +101,7 @@ Options:
 		if (hasAgentsMd) options.push({ value: "agents", label: "AGENTS.md" })
 
 		const selected = await p.multiselect({
-			message: "Inject livespec section into:",
+			message: "Setup livespec in:",
 			options,
 			initialValues: options.map((o) => o.value),
 			required: false,
@@ -112,6 +116,31 @@ Options:
 		injectAgentsMd = selected.includes("agents")
 	}
 
+	// Prompt for AI tools
+	if (skipPrompts) {
+		// Default to Claude Code when skipping prompts
+		selectedTools = ["claude"]
+	} else {
+		const toolOptions = ALL_TOOLS.map((id) => ({
+			value: id,
+			label: AI_TOOLS[id].name,
+		}))
+
+		const tools = await p.multiselect({
+			message: "Setup /livespec command for:",
+			options: toolOptions,
+			initialValues: ["claude"] as AITool[],
+			required: false,
+		})
+
+		if (p.isCancel(tools)) {
+			p.cancel("Cancelled.")
+			return
+		}
+
+		selectedTools = tools
+	}
+
 	const s = p.spinner()
 	s.start("Creating livespec directory structure")
 
@@ -120,6 +149,7 @@ Options:
 		skipExisting: true,
 		injectClaudeMd,
 		injectAgentsMd,
+		tools: selectedTools,
 	})
 
 	s.stop("Created livespec directory structure")
@@ -128,12 +158,20 @@ Options:
 		p.log.error(`Errors:\n${result.errors.map((e) => `  - ${e}`).join("\n")}`)
 	}
 
-	p.note(
-		`1. Run /livespec in Claude to populate project details
+	// Build dynamic next steps based on selected tools
+	const toolNames = selectedTools.map((t) => AI_TOOLS[t].name).join(", ")
+	const firstTool = selectedTools[0]
+	const commandExample = firstTool ? AI_TOOLS[firstTool].commandExample : "/livespec"
+
+	const nextSteps =
+		selectedTools.length > 0
+			? `1. Run ${commandExample} in ${toolNames} to populate project details
 2. Add specs in livespec/projects/
-3. Read livespec/AGENTS.md for the full workflow`,
-		"Next steps",
-	)
+3. Read livespec/AGENTS.md for the full workflow`
+			: `1. Add specs in livespec/projects/
+2. Read livespec/AGENTS.md for the full workflow`
+
+	p.note(nextSteps, "Next steps")
 
 	p.outro("Done!")
 }

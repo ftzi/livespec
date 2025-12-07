@@ -17,6 +17,7 @@
 			"!**/.turbo",
 			"!**/coverage",
 			"!**/.cache",
+			"!**/.test-output",
 			"!**/e2e/.output",
 			"!**/e2e/.snapshots",
 			"!**/mockServiceWorker.js",

@@ -1,6 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { AI_TOOLS, type AITool } from "./tools"
+
+export type { AITool }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -10,6 +13,7 @@ export type InitOptions = {
 	skipExisting?: boolean
 	injectClaudeMd?: boolean
 	injectAgentsMd?: boolean
+	tools?: AITool[]
 }
 
 export type InitResult = {
@@ -32,6 +36,13 @@ type InjectSectionOptions = {
 	result: InitResult
 }
 
+type SetupToolCommandOptions = {
+	cwd: string
+	tool: AITool
+	skipExisting: boolean
+	result: InitResult
+}
+
 function getTemplatePath(templateName: string): string {
 	return join(__dirname, "..", "templates", templateName)
 }
@@ -50,6 +61,7 @@ export function init(options: InitOptions = {}): InitResult {
 		skipExisting = true,
 		injectClaudeMd = false,
 		injectAgentsMd = false,
+		tools = [],
 	} = options
 
 	const result: InitResult = {
@@ -107,6 +119,11 @@ export function init(options: InitOptions = {}): InitResult {
 	if (injectAgentsMd) {
 		const rootAgentsMdPath = join(cwd, "AGENTS.md")
 		injectLivespecSection({ filePath: rootAgentsMdPath, skipExisting, result })
+	}
+
+	// Setup AI tool commands
+	for (const tool of tools) {
+		setupToolCommand({ cwd, tool, skipExisting, result })
 	}
 
 	return result
@@ -177,6 +194,27 @@ function injectLivespecSection({ filePath, skipExisting, result }: InjectSection
 	}
 }
 
+function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandOptions): void {
+	const config = AI_TOOLS[tool]
+	const commandDir = join(cwd, config.commandDir)
+	const commandPath = join(commandDir, config.commandFile)
+
+	// Create command directory if it doesn't exist
+	if (!existsSync(commandDir)) {
+		try {
+			mkdirSync(commandDir, { recursive: true })
+			result.created.push(commandDir)
+		} catch (_error) {
+			result.errors.push(`Failed to create directory: ${commandDir}`)
+			return
+		}
+	}
+
+	// Write command file
+	const commandContent = readTemplate("commands/livespec.md")
+	writeFileIfNotExists({ filePath: commandPath, content: commandContent, skipExisting, result })
+}
+
 /**
  * Check if livespec is already initialized in a directory.
  */
@@ -190,13 +228,28 @@ export type UpdateBaseFilesOptions = {
 	cwd?: string
 	injectClaudeMd?: boolean
 	injectAgentsMd?: boolean
+	tools?: AITool[]
+}
+
+/**
+ * Detect which AI tools have livespec commands installed.
+ */
+export function detectInstalledTools(cwd: string = process.cwd()): AITool[] {
+	const installed: AITool[] = []
+	for (const [id, config] of Object.entries(AI_TOOLS)) {
+		const commandPath = join(cwd, config.commandDir, config.commandFile)
+		if (existsSync(commandPath)) {
+			installed.push(id as AITool)
+		}
+	}
+	return installed
 }
 
 /**
  * Update base files (AGENTS.md, manifest.md) and optionally update root CLAUDE.md/AGENTS.md sections.
  */
 export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResult {
-	const { cwd = process.cwd(), injectClaudeMd = false, injectAgentsMd = false } = options
+	const { cwd = process.cwd(), injectClaudeMd = false, injectAgentsMd = false, tools = [] } = options
 
 	const result: InitResult = {
 		created: [],
@@ -227,7 +280,19 @@ export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResul
 		injectLivespecSection({ filePath: rootAgentsMdPath, skipExisting: false, result })
 	}
 
+	// Update AI tool commands
+	for (const tool of tools) {
+		updateToolCommand({ cwd, tool, result })
+	}
+
 	return result
+}
+
+function updateToolCommand({ cwd, tool, result }: { cwd: string; tool: AITool; result: InitResult }): void {
+	const config = AI_TOOLS[tool]
+	const commandPath = join(cwd, config.commandDir, config.commandFile)
+	const commandContent = readTemplate("commands/livespec.md")
+	updateFileIfChanged({ filePath: commandPath, newContent: commandContent, result })
 }
 
 type UpdateFileOptions = {
