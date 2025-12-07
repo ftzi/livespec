@@ -1,0 +1,146 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": [
+			"**",
+			"!**/node_modules",
+			"!**/.next",
+			"!**/dist",
+			"!**/build",
+			"!**/out",
+			"!**/.turbo",
+			"!**/coverage",
+			"!**/.cache",
+			"!**/e2e/.output",
+			"!**/e2e/.snapshots",
+			"!**/mockServiceWorker.js",
+			"!**/next-env.d.ts",
+			"!packages/nextbook/src/components/icons/icon.tsx",
+			"!packages/nextbook/src/components/icons/logo.tsx"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 120
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"domains": {
+			"next": "recommended",
+			"project": "recommended"
+		},
+		"rules": {
+			"recommended": true,
+			"a11y": {
+				"recommended": true,
+				"useKeyWithClickEvents": "off",
+				"useSemanticElements": "off"
+			},
+			"nursery": {
+				"useSortedClasses": "on",
+				"noImportCycles": "on",
+				"noMisusedPromises": "on",
+				"noReactForwardRef": "on",
+				"noShadow": "on",
+				"noUnnecessaryConditions": "on",
+				"noUnusedExpressions": "on",
+				"useConsistentArrowReturn": "on",
+				"useExhaustiveSwitchCases": "on",
+				"useMaxParams": { "level": "on", "options": { "max": 2 } },
+				"noFloatingPromises": "on",
+				"noContinue": "on",
+				"noNextAsyncClientComponent": "on"
+			},
+			"correctness": {
+				"noUndeclaredDependencies": "on",
+				"noChildrenProp": "on",
+				"useSingleJsDocAsterisk": "on",
+				"useJsxKeyInIterable": "on",
+				"useJsonImportAttributes": "on",
+				"useHookAtTopLevel": "on",
+				"useExhaustiveDependencies": "on",
+				"noReactPropAssignments": "on"
+			},
+			"security": {
+				"noGlobalEval": "off"
+			},
+			"complexity": {
+				"noExcessiveCognitiveComplexity": "on",
+				"useSimplifiedLogicExpression": "on",
+				"useWhile": "on",
+				"noUselessStringConcat": "on"
+			},
+			"suspicious": {
+				"noConstantBinaryExpressions": "on",
+				"noEmptyBlockStatements": "on",
+				"noUnassignedVariables": "on",
+				"noBitwiseOperators": "on",
+				"noAlert": "on",
+				"useAwait": "on"
+			},
+			"performance": {
+				"noAwaitInLoops": "on",
+				"noBarrelFile": "on",
+				"noImgElement": "on",
+				"useTopLevelRegex": "on"
+			},
+			"style": {
+				"useCollapsedIf": "on",
+				"useShorthandAssign": "on",
+				"useSelfClosingElements": "on",
+				"useFragmentSyntax": "on",
+				"useConsistentTypeDefinitions": {
+					"level": "on",
+					"options": {
+						"style": "type"
+					}
+				},
+				"useFilenamingConvention": {
+					"level": "on",
+					"options": {
+						"filenameCases": ["kebab-case"]
+					}
+				},
+				"useConsistentCurlyBraces": "on",
+				"noYodaExpression": "on",
+				"noCommonJs": "on",
+				"noNegationElse": "on",
+				"noNestedTernary": "on",
+				"noSubstr": "on",
+				"noUnusedTemplateLiteral": "on",
+				"noUselessElse": "on"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"trailingCommas": "all",
+			"semicolons": "asNeeded",
+			"quoteStyle": "double"
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["packages/nextbook/src/index.ts"],
+			"linter": {
+				"rules": {
+					"performance": {
+						"noBarrelFile": "off"
+					}
+				}
+			}
+		}
+	]
+}
