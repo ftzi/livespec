@@ -3,10 +3,9 @@
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import * as p from "@clack/prompts"
+import { LIVESPEC_START_MARKER } from "./consts"
 import { type AITool, detectInstalledTools, init, isInitialized, updateBaseFiles } from "./init"
-import { AI_TOOLS, ALL_TOOLS } from "./tools"
-
-const LIVESPEC_MARKER = "<!-- LIVESPEC:START -->"
+import { AI_TOOLS, ALL_TOOLS } from "./tools/config"
 
 function getDefaultProjectName(): string {
 	const cwd = process.cwd()
@@ -16,7 +15,7 @@ function getDefaultProjectName(): string {
 function fileHasLivespecSection(filePath: string): boolean {
 	if (!existsSync(filePath)) return false
 	const content = readFileSync(filePath, "utf-8")
-	return content.includes(LIVESPEC_MARKER)
+	return content.includes(LIVESPEC_START_MARKER)
 }
 
 function detectExistingFiles(): { hasClaudeMd: boolean; hasAgentsMd: boolean } {

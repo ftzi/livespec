@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { AI_TOOLS, type AITool } from "./tools"
+import { LIVESPEC_END_MARKER, LIVESPEC_START_MARKER } from "./consts"
+import { AI_TOOLS, type AITool } from "./tools/config"
 
 export type { AITool }
 
@@ -153,13 +154,11 @@ function writeFileIfNotExists({ filePath, content, skipExisting, result }: Write
 
 function injectLivespecSection({ filePath, skipExisting, result }: InjectSectionOptions): void {
 	const livespecSection = readTemplate("CLAUDE-SECTION.md")
-	const startMarker = "<!-- LIVESPEC:START -->"
-	const endMarker = "<!-- LIVESPEC:END -->"
 
 	if (existsSync(filePath)) {
 		if (skipExisting) {
 			const content = readFileSync(filePath, "utf-8")
-			if (content.includes(startMarker)) {
+			if (content.includes(LIVESPEC_START_MARKER)) {
 				result.skipped.push(filePath)
 				return
 			}
@@ -168,13 +167,14 @@ function injectLivespecSection({ filePath, skipExisting, result }: InjectSection
 		try {
 			let content = readFileSync(filePath, "utf-8")
 
-			if (content.includes(startMarker)) {
+			if (content.includes(LIVESPEC_START_MARKER)) {
 				// Replace existing section
-				const startIndex = content.indexOf(startMarker)
-				const endIndex = content.indexOf(endMarker)
+				const startIndex = content.indexOf(LIVESPEC_START_MARKER)
+				const endIndex = content.indexOf(LIVESPEC_END_MARKER)
 
 				if (startIndex !== -1 && endIndex !== -1) {
-					content = content.slice(0, startIndex) + livespecSection + content.slice(endIndex + endMarker.length)
+					content =
+						content.slice(0, startIndex) + livespecSection + content.slice(endIndex + LIVESPEC_END_MARKER.length)
 					writeFileSync(filePath, content, "utf-8")
 					result.updated.push(filePath)
 				}

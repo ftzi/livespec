@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test"
 import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
-import { detectInstalledTools, init, updateBaseFiles } from "./init"
-import { cleanupTestDir, setupTestDir, TEST_DIR } from "./test-utils"
+import { detectInstalledTools, init, updateBaseFiles } from "../init"
+import { cleanupTestDir, setupTestDir, TEST_DIR } from "../test-utils"
 
 describe("multiple tools", () => {
 	beforeEach(setupTestDir)
