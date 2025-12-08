@@ -153,7 +153,7 @@ function writeFileIfNotExists({ filePath, content, skipExisting, result }: Write
 }
 
 function injectLivespecSection({ filePath, skipExisting, result }: InjectSectionOptions): void {
-	const livespecSection = readTemplate("CLAUDE-SECTION.md")
+	const livespecSection = readTemplate("AGENTS-SECTION.md")
 
 	if (existsSync(filePath)) {
 		if (skipExisting) {

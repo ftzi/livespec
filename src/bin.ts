@@ -34,12 +34,8 @@ function detectLivespecSections(): { claudeMdHasSection: boolean; agentsMdHasSec
 	}
 }
 
-async function main(): Promise<void> {
-	const args = process.argv.slice(2)
-	const skipPrompts = args.includes("-y") || args.includes("--yes")
-
-	if (args.includes("-h") || args.includes("--help")) {
-		console.log(`
+function showHelp(): void {
+	console.log(`
 livespec - Living specification management for AI-native development
 
 Usage:
@@ -49,94 +45,124 @@ Options:
   --yes, -y     Skip prompts and use defaults
   --help, -h    Show this help message
 `)
-		return
-	}
+}
 
-	p.intro("livespec")
-
-	const alreadyInitialized = isInitialized()
-	const { hasClaudeMd, hasAgentsMd } = detectExistingFiles()
-
-	// If already initialized, update base files
-	if (alreadyInitialized) {
-		if (!skipPrompts) {
-			const action = await p.select({
-				message: "Livespec is already initialized. What would you like to do?",
-				options: [
-					{ value: "update", label: "Update base files" },
-					{ value: "cancel", label: "Cancel" },
-				],
-			})
-
-			if (p.isCancel(action) || action === "cancel") {
-				p.cancel("Cancelled.")
-				return
-			}
-		}
-
-		// Update mode - update root files that have the livespec section
-		const { claudeMdHasSection, agentsMdHasSection } = detectLivespecSections()
-		const installedTools = detectInstalledTools()
-		const result = updateBaseFiles({
-			injectClaudeMd: claudeMdHasSection,
-			injectAgentsMd: agentsMdHasSection,
-			tools: installedTools,
+async function handleUpdate(skipPrompts: boolean): Promise<void> {
+	if (!skipPrompts) {
+		const action = await p.select({
+			message: "Livespec is already initialized. What would you like to do?",
+			options: [
+				{ value: "update", label: "Update base files" },
+				{ value: "cancel", label: "Cancel" },
+			],
 		})
 
-		const updated = result.updated.length
-		const unchanged = result.skipped.length
-		p.outro(updated > 0 ? `Updated ${updated} files.` : `All ${unchanged} files unchanged.`)
-		return
+		if (p.isCancel(action) || action === "cancel") {
+			p.cancel("Cancelled.")
+			return
+		}
 	}
 
-	// Fresh init
+	const { claudeMdHasSection, agentsMdHasSection } = detectLivespecSections()
+	const installedTools = detectInstalledTools()
+	const result = updateBaseFiles({
+		injectClaudeMd: claudeMdHasSection,
+		injectAgentsMd: agentsMdHasSection,
+		tools: installedTools,
+	})
+
+	const updated = result.updated.length
+	const unchanged = result.skipped.length
+	p.outro(updated > 0 ? `Updated ${updated} files.` : `All ${unchanged} files unchanged.`)
+}
+
+async function promptForInjectionTargets(
+	hasClaudeMd: boolean,
+	hasAgentsMd: boolean,
+): Promise<{ injectClaudeMd: boolean; injectAgentsMd: boolean } | null> {
+	const options: Array<{ value: string; label: string }> = []
+	if (hasClaudeMd) options.push({ value: "claude", label: "CLAUDE.md" })
+	if (hasAgentsMd) options.push({ value: "agents", label: "AGENTS.md" })
+
+	const selected = await p.multiselect({
+		message: "Setup livespec in:",
+		options,
+		initialValues: options.map((o) => o.value),
+		required: false,
+	})
+
+	if (p.isCancel(selected)) {
+		p.cancel("Cancelled.")
+		return null
+	}
+
+	return {
+		injectClaudeMd: selected.includes("claude"),
+		injectAgentsMd: selected.includes("agents"),
+	}
+}
+
+async function promptForTools(): Promise<AITool[] | null> {
+	const toolOptions = ALL_TOOLS.map((id) => ({
+		value: id,
+		label: AI_TOOLS[id].name,
+	}))
+
+	const tools = await p.multiselect({
+		message: "Setup /livespec command for:",
+		options: toolOptions,
+		initialValues: ["claude"] as AITool[],
+		required: false,
+	})
+
+	if (p.isCancel(tools)) {
+		p.cancel("Cancelled.")
+		return null
+	}
+
+	return tools
+}
+
+function showNextSteps(selectedTools: AITool[]): void {
+	const toolNames = selectedTools.map((t) => AI_TOOLS[t].name).join(", ")
+	const firstTool = selectedTools[0]
+	const commandExample = firstTool ? AI_TOOLS[firstTool].commandExample : "/livespec"
+
+	const nextSteps =
+		selectedTools.length > 0
+			? `1. Run ${commandExample} in ${toolNames} to populate project details
+2. Add specs in livespec/projects/
+3. Read livespec/AGENTS.md for the full workflow`
+			: `1. Add specs in livespec/projects/
+2. Read livespec/AGENTS.md for the full workflow`
+
+	p.note(nextSteps, "Next steps")
+}
+
+type FreshInitOptions = {
+	skipPrompts: boolean
+	hasClaudeMd: boolean
+	hasAgentsMd: boolean
+}
+
+async function handleFreshInit(options: FreshInitOptions): Promise<void> {
+	const { skipPrompts, hasClaudeMd, hasAgentsMd } = options
 	let injectClaudeMd = hasClaudeMd
 	let injectAgentsMd = hasAgentsMd
 	let selectedTools: AITool[] = []
 
 	if (!skipPrompts && (hasClaudeMd || hasAgentsMd)) {
-		const options: Array<{ value: string; label: string }> = []
-		if (hasClaudeMd) options.push({ value: "claude", label: "CLAUDE.md" })
-		if (hasAgentsMd) options.push({ value: "agents", label: "AGENTS.md" })
-
-		const selected = await p.multiselect({
-			message: "Setup livespec in:",
-			options,
-			initialValues: options.map((o) => o.value),
-			required: false,
-		})
-
-		if (p.isCancel(selected)) {
-			p.cancel("Cancelled.")
-			return
-		}
-
-		injectClaudeMd = selected.includes("claude")
-		injectAgentsMd = selected.includes("agents")
+		const targets = await promptForInjectionTargets(hasClaudeMd, hasAgentsMd)
+		if (!targets) return
+		injectClaudeMd = targets.injectClaudeMd
+		injectAgentsMd = targets.injectAgentsMd
 	}
 
-	// Prompt for AI tools
 	if (skipPrompts) {
-		// Default to Claude Code when skipping prompts
 		selectedTools = ["claude"]
 	} else {
-		const toolOptions = ALL_TOOLS.map((id) => ({
-			value: id,
-			label: AI_TOOLS[id].name,
-		}))
-
-		const tools = await p.multiselect({
-			message: "Setup /livespec command for:",
-			options: toolOptions,
-			initialValues: ["claude"] as AITool[],
-			required: false,
-		})
-
-		if (p.isCancel(tools)) {
-			p.cancel("Cancelled.")
-			return
-		}
-
+		const tools = await promptForTools()
+		if (!tools) return
 		selectedTools = tools
 	}
 
@@ -157,22 +183,27 @@ Options:
 		p.log.error(`Errors:\n${result.errors.map((e) => `  - ${e}`).join("\n")}`)
 	}
 
-	// Build dynamic next steps based on selected tools
-	const toolNames = selectedTools.map((t) => AI_TOOLS[t].name).join(", ")
-	const firstTool = selectedTools[0]
-	const commandExample = firstTool ? AI_TOOLS[firstTool].commandExample : "/livespec"
-
-	const nextSteps =
-		selectedTools.length > 0
-			? `1. Run ${commandExample} in ${toolNames} to populate project details
-2. Add specs in livespec/projects/
-3. Read livespec/AGENTS.md for the full workflow`
-			: `1. Add specs in livespec/projects/
-2. Read livespec/AGENTS.md for the full workflow`
-
-	p.note(nextSteps, "Next steps")
-
+	showNextSteps(selectedTools)
 	p.outro("Done!")
+}
+
+async function main(): Promise<void> {
+	const args = process.argv.slice(2)
+	const skipPrompts = args.includes("-y") || args.includes("--yes")
+
+	if (args.includes("-h") || args.includes("--help")) {
+		showHelp()
+		return
+	}
+
+	p.intro("livespec")
+
+	if (isInitialized()) {
+		await handleUpdate(skipPrompts)
+	} else {
+		const { hasClaudeMd, hasAgentsMd } = detectExistingFiles()
+		await handleFreshInit({ skipPrompts, hasClaudeMd, hasAgentsMd })
+	}
 }
 
 main().catch((error) => {
