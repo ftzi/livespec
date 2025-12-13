@@ -1,3 +1,5 @@
+<!-- livespec-version: {{VERSION}} -->
+
 # Livespec Instructions
 
 Instructions for AI assistants using Livespec for living specification development.
@@ -27,12 +29,13 @@ Livespec treats specifications as **living documentation** that evolves with cod
 
 ## TL;DR Quick Checklist
 
+- **MUST** create a plan before implementing any new feature
 - Check relevant specs before making changes: `livespec/projects/[project]/`
 - Spec IDs inline with headers: `## Feature Name [PRJ.feature.name]`
 - Reference in code/tests: `/** @spec [PRJ.sidebar.tabs-display] */`
 - Every scenario declares: `Testing: e2e` or `Testing: unit`
 - Run housekeeping periodically to keep specs in sync
-- Never expect manual testing — all scenarios must be automatically testable
+- **NEVER** expect manual testing — all scenarios must be automatically testable
 
 ## Before Any Task
 
@@ -255,27 +258,25 @@ Problem or opportunity being addressed.
 
 ## When to Create Plans
 
+**You MUST create a plan before implementing any non-trivial feature.** Do not ask "want me to add this?" — create the plan first, present it, then implement after approval.
+
 ### Decision Tree
+
+**ALWAYS run this decision tree before starting implementation:**
 
 ```
 New request?
 ├─ Bug fix restoring spec behavior? → Fix directly, no plan
 ├─ Typo/format/comment only? → Fix directly, no plan
 ├─ Test for existing spec? → Add test directly, no plan
-├─ New feature or capability? → Create plan
-├─ Breaking change (API, behavior)? → Create plan
-├─ Architecture change? → Create plan
-├─ Cross-cutting (multiple specs)? → Create plan
-└─ Unclear scope? → Create plan (safer)
+├─ New feature or capability? → MUST create plan first
+├─ Breaking change (API, behavior)? → MUST create plan first
+├─ Architecture change? → MUST create plan first
+├─ Cross-cutting (multiple specs)? → MUST create plan first
+└─ Unclear scope? → MUST create plan first (safer)
 ```
 
-### Plan Triggers
-
-Create a plan when user says things like:
-- "Help me plan..." / "Create a plan for..."
-- "I want to add [feature]..." (significant feature)
-- "Let's implement..." (new capability)
-- "We need to change how..." (behavior change)
+**NEVER start implementing a new feature without a plan.** The plan ensures alignment before effort is spent.
 
 ### Skip Plans For
 
@@ -345,7 +346,7 @@ For significant features or changes:
 
 ### 3. Housekeeping
 
-Run `/livespec-housekeeping` periodically to keep specs healthy.
+Run `/livespec-sync` periodically to keep specs healthy.
 
 **Housekeeping checks:**
 1. **Spec validity** — All specs parse correctly, have required fields
@@ -494,6 +495,6 @@ Testing: e2e
 
 ### Commands
 - `/livespec` — Project companion: shows status, offers suggestions, helps plan and implement features
-- `/livespec-housekeeping` — Validate specs, check test coverage, auto-promote and archive completed plans
+- `/livespec-sync` — Validate specs, check test coverage, auto-promote and archive completed plans
 
 Remember: Specs are living. Code evolves. Keep them in sync.

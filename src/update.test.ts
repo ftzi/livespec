@@ -1,8 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test"
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { init, updateBaseFiles } from "./init"
 import { cleanupTestDir, setupTestDir, TEST_DIR } from "./test-utils"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 /** @spec [LIV.update] */
 describe("updateBaseFiles", () => {
@@ -25,6 +28,22 @@ describe("updateBaseFiles", () => {
 		expect(content).toContain("## Philosophy")
 		expect(content).not.toContain("# Old content")
 		expect(result.updated).toContain(livespecMdPath)
+	})
+
+	/** @spec [LIV.update.base-files.version] */
+	it("updates version comment to current package.json version", () => {
+		init({ cwd: TEST_DIR })
+
+		// Write old version
+		const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+		writeFileSync(livespecMdPath, "<!-- livespec-version: 0.0.1 -->\n# Old")
+
+		updateBaseFiles({ cwd: TEST_DIR })
+
+		const content = readFileSync(livespecMdPath, "utf-8")
+		const packageJson = JSON.parse(readFileSync(join(__dirname, "..", "package.json"), "utf-8"))
+		expect(content).toContain(`<!-- livespec-version: ${packageJson.version} -->`)
+		expect(content).not.toContain("0.0.1")
 	})
 
 	/** @spec [LIV.update.base-files.skip-unchanged] */

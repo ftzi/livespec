@@ -8,6 +8,12 @@ export type { AITool }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+function getVersion(): string {
+	const packageJsonPath = join(__dirname, "..", "package.json")
+	const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"))
+	return packageJson.version
+}
+
 export type InitOptions = {
 	cwd?: string
 	projectName?: string
@@ -49,7 +55,9 @@ function getTemplatePath(templateName: string): string {
 }
 
 function readTemplate(templateName: string): string {
-	return readFileSync(getTemplatePath(templateName), "utf-8")
+	let content = readFileSync(getTemplatePath(templateName), "utf-8")
+	content = content.replace("{{VERSION}}", getVersion())
+	return content
 }
 
 /**
@@ -194,7 +202,7 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 	const config = AI_TOOLS[tool]
 	const commandDir = join(cwd, config.commandDir)
 	const commandPath = join(commandDir, config.commandFile)
-	const housekeepingCommandPath = join(commandDir, config.housekeepingCommandFile)
+	const syncCommandPath = join(commandDir, config.syncCommandFile)
 
 	// Create command directory if it doesn't exist
 	if (!existsSync(commandDir)) {
@@ -211,9 +219,9 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 	const commandContent = readTemplate("commands/livespec.md")
 	writeFileIfNotExists({ filePath: commandPath, content: commandContent, skipExisting, result })
 
-	// Write housekeeping command file
-	const housekeepingContent = readTemplate("commands/livespec-housekeeping.md")
-	writeFileIfNotExists({ filePath: housekeepingCommandPath, content: housekeepingContent, skipExisting, result })
+	// Write sync command file
+	const syncContent = readTemplate("commands/livespec-sync.md")
+	writeFileIfNotExists({ filePath: syncCommandPath, content: syncContent, skipExisting, result })
 }
 
 /**
@@ -293,10 +301,10 @@ function updateToolCommand({ cwd, tool, result }: { cwd: string; tool: AITool; r
 	const commandContent = readTemplate("commands/livespec.md")
 	updateFileIfChanged({ filePath: commandPath, newContent: commandContent, result })
 
-	// Update housekeeping command
-	const housekeepingPath = join(cwd, config.commandDir, config.housekeepingCommandFile)
-	const housekeepingContent = readTemplate("commands/livespec-housekeeping.md")
-	updateFileIfChanged({ filePath: housekeepingPath, newContent: housekeepingContent, result })
+	// Update sync command
+	const syncPath = join(cwd, config.commandDir, config.syncCommandFile)
+	const syncContent = readTemplate("commands/livespec-sync.md")
+	updateFileIfChanged({ filePath: syncPath, newContent: syncContent, result })
 }
 
 type UpdateFileOptions = {

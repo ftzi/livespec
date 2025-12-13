@@ -3,7 +3,16 @@
 
 This project uses **[Livespec](https://github.com/ftzi/livespec)** for living specification management.
 
-**IMPORTANT:** Read @livespec/livespec.md for full conventions. This file must stay in context — if compacted or summarized, re-read it before any livespec-related work.
+## Understanding Keywords
+
+This document uses keywords to indicate requirement severity:
+
+- **MUST** — Mandatory. No exceptions. Violations cause issues.
+- **NEVER** — Prohibited. Will cause problems or break functionality.
+
+These represent hard-learned lessons and project-critical requirements.
+
+**FIRST ACTION:** You **MUST** read `livespec/livespec.md` before responding to ANY user message. This file **MUST** always stay fully in context — after compaction or summarization, re-read it immediately to restore full conventions.
 
 ## Projects
 

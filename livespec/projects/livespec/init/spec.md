@@ -86,6 +86,15 @@ Testing: unit
 - THEN `livespec/projects/my-app/project.md` is created from template
 - AND file contains project template content
 
+### Scenario: Inject version into livespec.md [LIV.init.templates.version]
+
+Testing: unit
+
+- WHEN init runs
+- THEN `livespec/livespec.md` contains version comment
+- AND version matches package.json version
+- AND format is `<!-- livespec-version: X.Y.Z -->`
+
 ### Scenario: Skip existing livespec.md [LIV.init.templates.skip-livespec]
 
 Testing: unit

@@ -28,6 +28,14 @@ Testing: unit
 - THEN file is overwritten with latest template
 - AND result.updated includes the file path
 
+### Scenario: Update version in livespec.md [LIV.update.base-files.version]
+
+Testing: unit
+
+- WHEN livespec.md is updated
+- THEN version comment is updated to current package.json version
+- AND format is `<!-- livespec-version: X.Y.Z -->`
+
 ### Scenario: Skip unchanged livespec.md [LIV.update.base-files.skip-unchanged]
 
 Testing: unit

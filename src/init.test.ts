@@ -1,8 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test"
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
 import { init, isInitialized } from "./init"
 import { cleanupTestDir, setupTestDir, TEST_DIR } from "./test-utils"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 describe("livespec init", () => {
 	beforeEach(setupTestDir)
@@ -75,6 +78,18 @@ describe("livespec init", () => {
 	})
 
 	describe("livespec/livespec.md content", () => {
+		/** @spec [LIV.init.templates.version] */
+		it("contains version comment with package.json version", () => {
+			init({ cwd: TEST_DIR })
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
+
+			// Read expected version from package.json
+			const packageJson = JSON.parse(readFileSync(join(__dirname, "..", "package.json"), "utf-8"))
+			const expectedVersion = packageJson.version
+
+			expect(content).toContain(`<!-- livespec-version: ${expectedVersion} -->`)
+		})
+
 		it("contains philosophy section", () => {
 			init({ cwd: TEST_DIR })
 			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")

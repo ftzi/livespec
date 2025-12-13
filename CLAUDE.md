@@ -4,7 +4,16 @@
 
 This project uses **[Livespec](https://github.com/ftzi/livespec)** for living specification management.
 
-**IMPORTANT:** Read @livespec/livespec.md for full conventions. This file must stay in context — if compacted or summarized, re-read it before any livespec-related work.
+## Understanding Keywords
+
+This document uses keywords to indicate requirement severity:
+
+- **MUST** — Mandatory. No exceptions. Violations cause issues.
+- **NEVER** — Prohibited. Will cause problems or break functionality.
+
+These represent hard-learned lessons and project-critical requirements.
+
+**FIRST ACTION:** You **MUST** read `livespec/livespec.md` before responding to ANY user message. This file **MUST** always stay fully in context — after compaction or summarization, re-read it immediately to restore full conventions.
 
 ## Projects
 
@@ -25,6 +34,8 @@ This project uses **[Livespec](https://github.com/ftzi/livespec)** for living sp
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 **Important:** If you discover any information in this file that is no longer accurate or has become outdated, please update it immediately to reflect the current state of the codebase.
+
+**README Sync:** README.md MUST be kept in sync with the project. When changing features, workflows, or conventions, update README.md to reflect those changes.
 
 **Workflow Rule:** Always run `bun ok` after finishing a task or when facing issues. This command runs type checking, linting, and tests across the entire codebase and must fully pass before considering a task complete.
 
