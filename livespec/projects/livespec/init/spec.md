@@ -1,42 +1,49 @@
-# Initialization [LSP.init]
+# Initialization [LIV.init]
 
 The `init` function creates the livespec directory structure and files. It's the core logic used by the CLI for fresh initialization.
 
 ## Design Decisions
 
 ### Template-Based
+
 All created files come from templates in the `templates/` directory. This allows updating the templates and having `livespec update` propagate changes to existing projects.
 
 ### Skip Existing by Default
+
 When `skipExisting: true` (the default), existing files are preserved. This prevents accidentally overwriting user customizations.
 
 ### Injection into Existing Files
+
 CLAUDE.md and AGENTS.md injection only works on existing files — livespec won't create these files. This respects that these are user-owned files.
 
 ---
 
-## Directory Structure [LSP.init.directories]
+## Directory Structure [LIV.init.directories]
 
-### Scenario: Create livespec directory [LSP.init.directories.livespec]
+### Scenario: Create livespec directory [LIV.init.directories.livespec]
+
 Testing: unit
 
 - WHEN init runs in a directory without `livespec/`
 - THEN `livespec/` directory is created
 - AND result.created includes the directory path
 
-### Scenario: Create projects directory [LSP.init.directories.projects]
+### Scenario: Create projects directory [LIV.init.directories.projects]
+
 Testing: unit
 
 - WHEN init runs
 - THEN `livespec/projects/` directory is created
 
-### Scenario: Create project subdirectory [LSP.init.directories.project]
+### Scenario: Create project subdirectory [LIV.init.directories.project]
+
 Testing: unit
 
 - WHEN init runs with projectName "my-app"
 - THEN `livespec/projects/my-app/` directory is created
 
-### Scenario: Create plans directories [LSP.init.directories.plans]
+### Scenario: Create plans directories [LIV.init.directories.plans]
+
 Testing: unit
 
 - WHEN init runs
@@ -44,13 +51,15 @@ Testing: unit
 - AND `livespec/plans/active/` directory is created
 - AND `livespec/plans/archived/` directory is created
 
-### Scenario: Default project name [LSP.init.directories.default-name]
+### Scenario: Default project name [LIV.init.directories.default-name]
+
 Testing: unit
 
 - WHEN init runs without projectName option
 - THEN project subdirectory is named "my-project"
 
-### Scenario: Handle directory creation errors [LSP.init.directories.errors]
+### Scenario: Handle directory creation errors [LIV.init.directories.errors]
+
 Testing: unit
 
 - WHEN directory creation fails (e.g., permission denied)
@@ -59,23 +68,26 @@ Testing: unit
 
 ---
 
-## Template Files [LSP.init.templates]
+## Template Files [LIV.init.templates]
 
-### Scenario: Create livespec.md [LSP.init.templates.livespec-md]
+### Scenario: Create livespec.md [LIV.init.templates.livespec-md]
+
 Testing: unit
 
 - WHEN init runs
 - THEN `livespec/livespec.md` is created from template
 - AND file contains livespec instructions
 
-### Scenario: Create project.md [LSP.init.templates.project-md]
+### Scenario: Create project.md [LIV.init.templates.project-md]
+
 Testing: unit
 
 - WHEN init runs with projectName "my-app"
 - THEN `livespec/projects/my-app/project.md` is created from template
 - AND file contains project template content
 
-### Scenario: Skip existing livespec.md [LSP.init.templates.skip-livespec]
+### Scenario: Skip existing livespec.md [LIV.init.templates.skip-livespec]
+
 Testing: unit
 
 - WHEN init runs with skipExisting: true
@@ -83,7 +95,8 @@ Testing: unit
 - THEN file is not overwritten
 - AND result.skipped includes the file path
 
-### Scenario: Overwrite existing when skipExisting false [LSP.init.templates.overwrite]
+### Scenario: Overwrite existing when skipExisting false [LIV.init.templates.overwrite]
+
 Testing: unit
 
 - WHEN init runs with skipExisting: false
@@ -93,11 +106,12 @@ Testing: unit
 
 ---
 
-## Section Injection [LSP.init.injection]
+## Section Injection [LIV.init.injection]
 
 Injects livespec section into CLAUDE.md or AGENTS.md.
 
-### Scenario: Prepend section to existing file [LSP.init.injection.prepend]
+### Scenario: Prepend section to existing file [LIV.init.injection.prepend]
+
 Testing: unit
 
 - WHEN injectClaudeMd: true
@@ -106,7 +120,8 @@ Testing: unit
 - AND original content is preserved after the section
 - AND result.updated includes the file path
 
-### Scenario: Replace existing section [LSP.init.injection.replace]
+### Scenario: Replace existing section [LIV.init.injection.replace]
+
 Testing: unit
 
 - WHEN injectClaudeMd: true
@@ -114,7 +129,8 @@ Testing: unit
 - THEN content between markers is replaced with new section
 - AND content outside markers is preserved
 
-### Scenario: Skip injection when section exists and skipExisting [LSP.init.injection.skip]
+### Scenario: Skip injection when section exists and skipExisting [LIV.init.injection.skip]
+
 Testing: unit
 
 - WHEN injectClaudeMd: true
@@ -123,7 +139,8 @@ Testing: unit
 - THEN file is not modified
 - AND result.skipped includes the file path
 
-### Scenario: Skip injection when file doesn't exist [LSP.init.injection.no-file]
+### Scenario: Skip injection when file doesn't exist [LIV.init.injection.no-file]
+
 Testing: unit
 
 - WHEN injectClaudeMd: true
@@ -131,14 +148,16 @@ Testing: unit
 - THEN no file is created
 - AND result.skipped includes the file path
 
-### Scenario: Inject into AGENTS.md [LSP.init.injection.agents]
+### Scenario: Inject into AGENTS.md [LIV.init.injection.agents]
+
 Testing: unit
 
 - WHEN injectAgentsMd: true
 - AND AGENTS.md exists
 - THEN livespec section is added to AGENTS.md
 
-### Scenario: Section content [LSP.init.injection.content]
+### Scenario: Section content [LIV.init.injection.content]
+
 Testing: unit
 
 - WHEN section is injected
@@ -150,35 +169,40 @@ Testing: unit
 
 ---
 
-## AI Tool Commands [LSP.init.tools]
+## AI Tool Commands [LIV.init.tools]
 
 Creates `/livespec` command files for AI coding assistants.
 
-### Scenario: Create Claude Code command [LSP.init.tools.claude]
+### Scenario: Create Claude Code command [LIV.init.tools.claude]
+
 Testing: unit
 
 - WHEN tools includes "claude"
 - THEN `.claude/commands/livespec.md` is created
 
-### Scenario: Create GitHub Copilot command [LSP.init.tools.copilot]
+### Scenario: Create GitHub Copilot command [LIV.init.tools.copilot]
+
 Testing: unit
 
 - WHEN tools includes "copilot"
 - THEN `.github/prompts/livespec.prompt.md` is created
 
-### Scenario: Create Cursor command [LSP.init.tools.cursor]
+### Scenario: Create Cursor command [LIV.init.tools.cursor]
+
 Testing: unit
 
 - WHEN tools includes "cursor"
 - THEN `.cursor/prompts/livespec.md` is created
 
-### Scenario: Create Windsurf command [LSP.init.tools.windsurf]
+### Scenario: Create Windsurf command [LIV.init.tools.windsurf]
+
 Testing: unit
 
 - WHEN tools includes "windsurf"
 - THEN `.windsurf/workflows/livespec.md` is created
 
-### Scenario: Create command directory [LSP.init.tools.directory]
+### Scenario: Create command directory [LIV.init.tools.directory]
+
 Testing: unit
 
 - WHEN tools includes "claude"
@@ -186,7 +210,8 @@ Testing: unit
 - THEN directory is created
 - AND result.created includes the directory path
 
-### Scenario: Skip existing command file [LSP.init.tools.skip]
+### Scenario: Skip existing command file [LIV.init.tools.skip]
+
 Testing: unit
 
 - WHEN tools includes "claude"
@@ -197,27 +222,31 @@ Testing: unit
 
 ---
 
-## Result Tracking [LSP.init.result]
+## Result Tracking [LIV.init.result]
 
-### Scenario: Track created items [LSP.init.result.created]
+### Scenario: Track created items [LIV.init.result.created]
+
 Testing: unit
 
 - WHEN init creates new directories and files
 - THEN result.created contains all created paths
 
-### Scenario: Track skipped items [LSP.init.result.skipped]
+### Scenario: Track skipped items [LIV.init.result.skipped]
+
 Testing: unit
 
 - WHEN init skips existing files
 - THEN result.skipped contains all skipped paths
 
-### Scenario: Track updated items [LSP.init.result.updated]
+### Scenario: Track updated items [LIV.init.result.updated]
+
 Testing: unit
 
 - WHEN init overwrites existing files
 - THEN result.updated contains all updated paths
 
-### Scenario: Track errors [LSP.init.result.errors]
+### Scenario: Track errors [LIV.init.result.errors]
+
 Testing: unit
 
 - WHEN init encounters errors
@@ -226,29 +255,33 @@ Testing: unit
 
 ---
 
-## isInitialized Check [LSP.init.is-initialized]
+## isInitialized Check [LIV.init.is-initialized]
 
-### Scenario: Empty directory [LSP.init.is-initialized.empty]
+### Scenario: Empty directory [LIV.init.is-initialized.empty]
+
 Testing: unit
 
 - WHEN directory has no livespec folder
 - THEN isInitialized returns false
 
-### Scenario: Partial structure [LSP.init.is-initialized.partial]
+### Scenario: Partial structure [LIV.init.is-initialized.partial]
+
 Testing: unit
 
 - WHEN `livespec/` exists
 - AND `livespec/livespec.md` does not exist
 - THEN isInitialized returns false
 
-### Scenario: Complete structure [LSP.init.is-initialized.complete]
+### Scenario: Complete structure [LIV.init.is-initialized.complete]
+
 Testing: unit
 
 - WHEN `livespec/` exists
 - AND `livespec/livespec.md` exists
 - THEN isInitialized returns true
 
-### Scenario: Minimal structure [LSP.init.is-initialized.minimal]
+### Scenario: Minimal structure [LIV.init.is-initialized.minimal]
+
 Testing: unit
 
 - WHEN only `livespec/livespec.md` exists (no other files)

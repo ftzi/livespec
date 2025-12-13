@@ -1,4 +1,4 @@
-# Livespec CLI [LSP]
+# Livespec CLI [LIV]
 
 Living specification management tool for AI-native development. Provides a CLI and framework for maintaining specifications that evolve with code.
 
@@ -17,19 +17,19 @@ Living specification management tool for AI-native development. Provides a CLI a
 
 ## Entry Points
 
-| Command | Spec | Description |
-|---------|------|-------------|
-| `npx livespec` | [LSP.cli] | Initialize or update livespec |
-| `npx livespec -y` | [LSP.cli.fresh-init.skip-prompts] | Non-interactive mode |
-| `npx livespec --help` | [LSP.cli.help] | Show help |
+| Command               | Spec                              | Description                   |
+| --------------------- | --------------------------------- | ----------------------------- |
+| `npx livespec`        | [LIV.cli]                         | Initialize or update livespec |
+| `npx livespec -y`     | [LIV.cli.fresh-init.skip-prompts] | Non-interactive mode          |
+| `npx livespec --help` | [LIV.cli.help]                    | Show help                     |
 
 ## Specs
 
-| Feature | Spec |
-|---------|------|
-| CLI behavior | [cli/spec.md](cli/spec.md) |
-| Initialization logic | [init/spec.md](init/spec.md) |
-| Update logic | [update/spec.md](update/spec.md) |
+| Feature              | Spec                             |
+| -------------------- | -------------------------------- |
+| CLI behavior         | [cli/spec.md](cli/spec.md)       |
+| Initialization logic | [init/spec.md](init/spec.md)     |
+| Update logic         | [update/spec.md](update/spec.md) |
 
 ## Conventions
 

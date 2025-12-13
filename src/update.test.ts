@@ -1,128 +1,142 @@
-import { afterEach, beforeEach, describe, expect, it } from "bun:test"
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
-import { init, updateBaseFiles } from "./init"
-import { cleanupTestDir, setupTestDir, TEST_DIR } from "./test-utils"
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { join } from "node:path";
+import { init, updateBaseFiles } from "./init";
+import { cleanupTestDir, setupTestDir, TEST_DIR } from "./test-utils";
 
+/** @spec [LIV.update] */
 describe("updateBaseFiles", () => {
-	beforeEach(setupTestDir)
-	afterEach(cleanupTestDir)
+  beforeEach(setupTestDir);
+  afterEach(cleanupTestDir);
 
-	it("updates livespec/livespec.md with latest template", () => {
-		// Initialize first
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.base-files.livespec-md] */
+  it("updates livespec/livespec.md with latest template", () => {
+    // Initialize first
+    init({ cwd: TEST_DIR });
 
-		// Modify livespec.md
-		const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
-		writeFileSync(livespecMdPath, "# Old content")
+    // Modify livespec.md
+    const livespecMdPath = join(TEST_DIR, "livespec/livespec.md");
+    writeFileSync(livespecMdPath, "# Old content");
 
-		// Update
-		const result = updateBaseFiles({ cwd: TEST_DIR })
+    // Update
+    const result = updateBaseFiles({ cwd: TEST_DIR });
 
-		const content = readFileSync(livespecMdPath, "utf-8")
-		expect(content).toContain("## Philosophy")
-		expect(content).not.toContain("# Old content")
-		expect(result.updated).toContain(livespecMdPath)
-	})
+    const content = readFileSync(livespecMdPath, "utf-8");
+    expect(content).toContain("## Philosophy");
+    expect(content).not.toContain("# Old content");
+    expect(result.updated).toContain(livespecMdPath);
+  });
 
-	it("skips files that are already up to date", () => {
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.base-files.skip-unchanged] */
+  it("skips files that are already up to date", () => {
+    init({ cwd: TEST_DIR });
 
-		// Don't modify anything
-		const result = updateBaseFiles({ cwd: TEST_DIR })
+    // Don't modify anything
+    const result = updateBaseFiles({ cwd: TEST_DIR });
 
-		expect(result.skipped.length).toBeGreaterThan(0)
-		expect(result.updated.length).toBe(0)
-	})
+    expect(result.skipped.length).toBeGreaterThan(0);
+    expect(result.updated.length).toBe(0);
+  });
 
-	it("updates root CLAUDE.md livespec section when injectClaudeMd is true", () => {
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.sections.claude] */
+  it("updates root CLAUDE.md livespec section when injectClaudeMd is true", () => {
+    init({ cwd: TEST_DIR });
 
-		// Create CLAUDE.md with old livespec section
-		const claudeMdPath = join(TEST_DIR, "CLAUDE.md")
-		writeFileSync(
-			claudeMdPath,
-			`<!-- LIVESPEC:START -->
+    // Create CLAUDE.md with old livespec section
+    const claudeMdPath = join(TEST_DIR, "CLAUDE.md");
+    writeFileSync(
+      claudeMdPath,
+      `<!-- LIVESPEC:START -->
 # Old section
 <!-- LIVESPEC:END -->
 
-# My instructions`,
-		)
+# My instructions`
+    );
 
-		const result = updateBaseFiles({ cwd: TEST_DIR, injectClaudeMd: true })
+    const result = updateBaseFiles({ cwd: TEST_DIR, injectClaudeMd: true });
 
-		const content = readFileSync(claudeMdPath, "utf-8")
-		expect(content).toContain("# Livespec")
-		expect(content).not.toContain("# Old section")
-		expect(content).toContain("# My instructions")
-		expect(result.updated).toContain(claudeMdPath)
-	})
+    const content = readFileSync(claudeMdPath, "utf-8");
+    expect(content).toContain("# Livespec");
+    expect(content).not.toContain("# Old section");
+    expect(content).toContain("# My instructions");
+    expect(result.updated).toContain(claudeMdPath);
+  });
 
-	it("updates root AGENTS.md livespec section when injectAgentsMd is true", () => {
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.sections.agents] */
+  it("updates root AGENTS.md livespec section when injectAgentsMd is true", () => {
+    init({ cwd: TEST_DIR });
 
-		const agentsMdPath = join(TEST_DIR, "AGENTS.md")
-		writeFileSync(
-			agentsMdPath,
-			`<!-- LIVESPEC:START -->
+    const agentsMdPath = join(TEST_DIR, "AGENTS.md");
+    writeFileSync(
+      agentsMdPath,
+      `<!-- LIVESPEC:START -->
 # Old section
 <!-- LIVESPEC:END -->
 
-# My agents`,
-		)
+# My agents`
+    );
 
-		const result = updateBaseFiles({ cwd: TEST_DIR, injectAgentsMd: true })
+    const result = updateBaseFiles({ cwd: TEST_DIR, injectAgentsMd: true });
 
-		const content = readFileSync(agentsMdPath, "utf-8")
-		expect(content).toContain("# Livespec")
-		expect(content).not.toContain("# Old section")
-		expect(content).toContain("# My agents")
-		expect(result.updated).toContain(agentsMdPath)
-	})
+    const content = readFileSync(agentsMdPath, "utf-8");
+    expect(content).toContain("# Livespec");
+    expect(content).not.toContain("# Old section");
+    expect(content).toContain("# My agents");
+    expect(result.updated).toContain(agentsMdPath);
+  });
 
-	it("does not touch root CLAUDE.md when injectClaudeMd is false", () => {
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.sections.skip] */
+  it("does not touch root CLAUDE.md when injectClaudeMd is false", () => {
+    init({ cwd: TEST_DIR });
 
-		const claudeMdPath = join(TEST_DIR, "CLAUDE.md")
-		writeFileSync(claudeMdPath, "# Untouched")
+    const claudeMdPath = join(TEST_DIR, "CLAUDE.md");
+    writeFileSync(claudeMdPath, "# Untouched");
 
-		updateBaseFiles({ cwd: TEST_DIR, injectClaudeMd: false })
+    updateBaseFiles({ cwd: TEST_DIR, injectClaudeMd: false });
 
-		const content = readFileSync(claudeMdPath, "utf-8")
-		expect(content).toBe("# Untouched")
-	})
+    const content = readFileSync(claudeMdPath, "utf-8");
+    expect(content).toBe("# Untouched");
+  });
 
-	it("does not touch root AGENTS.md when injectAgentsMd is false", () => {
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.sections.skip] */
+  it("does not touch root AGENTS.md when injectAgentsMd is false", () => {
+    init({ cwd: TEST_DIR });
 
-		const agentsMdPath = join(TEST_DIR, "AGENTS.md")
-		writeFileSync(agentsMdPath, "# Untouched")
+    const agentsMdPath = join(TEST_DIR, "AGENTS.md");
+    writeFileSync(agentsMdPath, "# Untouched");
 
-		updateBaseFiles({ cwd: TEST_DIR, injectAgentsMd: false })
+    updateBaseFiles({ cwd: TEST_DIR, injectAgentsMd: false });
 
-		const content = readFileSync(agentsMdPath, "utf-8")
-		expect(content).toBe("# Untouched")
-	})
+    const content = readFileSync(agentsMdPath, "utf-8");
+    expect(content).toBe("# Untouched");
+  });
 
-	it("creates missing livespec/livespec.md", () => {
-		init({ cwd: TEST_DIR })
+  /** @spec [LIV.update.base-files.create-missing] */
+  it("creates missing livespec/livespec.md", () => {
+    init({ cwd: TEST_DIR });
 
-		// Delete livespec.md
-		rmSync(join(TEST_DIR, "livespec/livespec.md"))
+    // Delete livespec.md
+    rmSync(join(TEST_DIR, "livespec/livespec.md"));
 
-		const result = updateBaseFiles({ cwd: TEST_DIR })
+    const result = updateBaseFiles({ cwd: TEST_DIR });
 
-		expect(existsSync(join(TEST_DIR, "livespec/livespec.md"))).toBe(true)
-		expect(result.created).toContain(join(TEST_DIR, "livespec/livespec.md"))
-	})
+    expect(existsSync(join(TEST_DIR, "livespec/livespec.md"))).toBe(true);
+    expect(result.created).toContain(join(TEST_DIR, "livespec/livespec.md"));
+  });
 
-	it("preserves content outside livespec markers in root files", () => {
-		init({ cwd: TEST_DIR })
+  it("preserves content outside livespec markers in root files", () => {
+    init({ cwd: TEST_DIR });
 
-		const claudeMdPath = join(TEST_DIR, "CLAUDE.md")
-		writeFileSync(
-			claudeMdPath,
-			`<!-- LIVESPEC:START -->
+    const claudeMdPath = join(TEST_DIR, "CLAUDE.md");
+    writeFileSync(
+      claudeMdPath,
+      `<!-- LIVESPEC:START -->
 # Livespec section
 <!-- LIVESPEC:END -->
 
@@ -130,34 +144,41 @@ describe("updateBaseFiles", () => {
 
 This should be preserved.
 
-## Another section`,
-		)
+## Another section`
+    );
 
-		updateBaseFiles({ cwd: TEST_DIR, injectClaudeMd: true })
+    updateBaseFiles({ cwd: TEST_DIR, injectClaudeMd: true });
 
-		const content = readFileSync(claudeMdPath, "utf-8")
-		expect(content).toContain("# Important custom section")
-		expect(content).toContain("This should be preserved.")
-		expect(content).toContain("## Another section")
-	})
+    const content = readFileSync(claudeMdPath, "utf-8");
+    expect(content).toContain("# Important custom section");
+    expect(content).toContain("This should be preserved.");
+    expect(content).toContain("## Another section");
+  });
 
-	it("does not modify specs or plans directories", () => {
-		init({ cwd: TEST_DIR, projectName: "test-app" })
+  it("does not modify specs or plans directories", () => {
+    init({ cwd: TEST_DIR, projectName: "test-app" });
 
-		// Add custom spec
-		const specPath = join(TEST_DIR, "livespec/projects/test-app/feature/spec.md")
-		mkdirSync(join(TEST_DIR, "livespec/projects/test-app/feature"), { recursive: true })
-		writeFileSync(specPath, "# My custom spec")
+    // Add custom spec
+    const specPath = join(
+      TEST_DIR,
+      "livespec/projects/test-app/feature/spec.md"
+    );
+    mkdirSync(join(TEST_DIR, "livespec/projects/test-app/feature"), {
+      recursive: true,
+    });
+    writeFileSync(specPath, "# My custom spec");
 
-		// Add custom plan
-		const planPath = join(TEST_DIR, "livespec/plans/active/my-plan/plan.md")
-		mkdirSync(join(TEST_DIR, "livespec/plans/active/my-plan"), { recursive: true })
-		writeFileSync(planPath, "# My custom plan")
+    // Add custom plan
+    const planPath = join(TEST_DIR, "livespec/plans/active/my-plan/plan.md");
+    mkdirSync(join(TEST_DIR, "livespec/plans/active/my-plan"), {
+      recursive: true,
+    });
+    writeFileSync(planPath, "# My custom plan");
 
-		updateBaseFiles({ cwd: TEST_DIR })
+    updateBaseFiles({ cwd: TEST_DIR });
 
-		// Custom files should be untouched
-		expect(readFileSync(specPath, "utf-8")).toBe("# My custom spec")
-		expect(readFileSync(planPath, "utf-8")).toBe("# My custom plan")
-	})
-})
+    // Custom files should be untouched
+    expect(readFileSync(specPath, "utf-8")).toBe("# My custom spec");
+    expect(readFileSync(planPath, "utf-8")).toBe("# My custom plan");
+  });
+});

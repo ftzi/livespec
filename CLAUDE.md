@@ -1,4 +1,5 @@
 <!-- LIVESPEC:START -->
+
 # Livespec
 
 This project uses **[Livespec](https://github.com/ftzi/livespec)** for living specification management.
@@ -9,9 +10,9 @@ This project uses **[Livespec](https://github.com/ftzi/livespec)** for living sp
 
 **Keep this table updated** — when you add, rename, or remove projects, update this table immediately.
 
-| Livespec Code | Project | Specs | Codebase |
-|---------------|---------|-------|----------|
-| LSP | Livespec CLI | `livespec/projects/livespec/` | `src/` |
+| Livespec Code | Project      | Specs                         | Codebase |
+| ------------- | ------------ | ----------------------------- | -------- |
+| LIV           | Livespec CLI | `livespec/projects/livespec/` | `src/`   |
 
 ## Quick Reference
 
@@ -20,7 +21,6 @@ This project uses **[Livespec](https://github.com/ftzi/livespec)** for living sp
 - **Conventions:** `livespec/livespec.md`
 
 <!-- LIVESPEC:END -->
-
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 

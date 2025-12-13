@@ -1,45 +1,51 @@
-# CLI [LSP.cli]
+# CLI [LIV.cli]
 
 The livespec CLI initializes and updates livespec configuration in projects. It's invoked via `npx livespec` or `livespec` if installed globally.
 
 ## Entry Points
 
-| Command | Description |
-|---------|-------------|
-| `npx livespec` | Initialize or update livespec |
-| `npx livespec -y` | Skip prompts, use defaults |
-| `npx livespec --help` | Show help message |
+| Command               | Description                   |
+| --------------------- | ----------------------------- |
+| `npx livespec`        | Initialize or update livespec |
+| `npx livespec -y`     | Skip prompts, use defaults    |
+| `npx livespec --help` | Show help message             |
 
 ## Design Decisions
 
 ### Single Command Design
+
 The CLI has one primary command that auto-detects whether to initialize or update based on existing state. This keeps usage simple — users just run `livespec` and it does the right thing.
 
 ### Interactive by Default
+
 Fresh initialization prompts for configuration choices. The `-y` flag enables non-interactive mode for CI/scripts.
 
 ### Project Name from Directory
+
 The default project name is derived from the current directory name, avoiding an extra prompt while still being sensible.
 
 ---
 
-## Help [LSP.cli.help]
+## Help [LIV.cli.help]
 
-### Scenario: Show help with -h flag [LSP.cli.help.short-flag]
+### Scenario: Show help with -h flag [LIV.cli.help.short-flag]
+
 Testing: unit
 
 - WHEN user runs `livespec -h`
 - THEN help text is displayed
 - AND process exits without error
 
-### Scenario: Show help with --help flag [LSP.cli.help.long-flag]
+### Scenario: Show help with --help flag [LIV.cli.help.long-flag]
+
 Testing: unit
 
 - WHEN user runs `livespec --help`
 - THEN help text is displayed
 - AND process exits without error
 
-### Scenario: Help text content [LSP.cli.help.content]
+### Scenario: Help text content [LIV.cli.help.content]
+
 Testing: unit
 
 - WHEN help is displayed
@@ -49,24 +55,27 @@ Testing: unit
 
 ---
 
-## Fresh Initialization [LSP.cli.fresh-init]
+## Fresh Initialization [LIV.cli.fresh-init]
 
 Runs when `livespec/livespec.md` does not exist.
 
-### Scenario: Detect fresh project [LSP.cli.fresh-init.detection]
+### Scenario: Detect fresh project [LIV.cli.fresh-init.detection]
+
 Testing: unit
 
 - WHEN `livespec/` directory does not exist
 - THEN CLI enters fresh initialization mode
 
-### Scenario: Detect fresh with partial structure [LSP.cli.fresh-init.partial]
+### Scenario: Detect fresh with partial structure [LIV.cli.fresh-init.partial]
+
 Testing: unit
 
 - WHEN `livespec/` directory exists
 - AND `livespec/livespec.md` does not exist
 - THEN CLI enters fresh initialization mode
 
-### Scenario: Prompt for injection targets [LSP.cli.fresh-init.injection-prompt]
+### Scenario: Prompt for injection targets [LIV.cli.fresh-init.injection-prompt]
+
 Testing: unit
 
 - WHEN CLAUDE.md exists in project root
@@ -75,19 +84,22 @@ Testing: unit
 - THEN CLI prompts "Setup livespec in:" with multiselect
 - AND both files are pre-selected by default
 
-### Scenario: Only show existing files in injection prompt [LSP.cli.fresh-init.injection-existing-only]
+### Scenario: Only show existing files in injection prompt [LIV.cli.fresh-init.injection-existing-only]
+
 Testing: unit
 
 - WHEN CLAUDE.md exists but AGENTS.md does not
 - THEN injection prompt only shows CLAUDE.md option
 
-### Scenario: Skip injection prompt when no files exist [LSP.cli.fresh-init.no-injection-files]
+### Scenario: Skip injection prompt when no files exist [LIV.cli.fresh-init.no-injection-files]
+
 Testing: unit
 
 - WHEN neither CLAUDE.md nor AGENTS.md exist
 - THEN injection prompt is skipped
 
-### Scenario: Prompt for AI tools [LSP.cli.fresh-init.tools-prompt]
+### Scenario: Prompt for AI tools [LIV.cli.fresh-init.tools-prompt]
+
 Testing: unit
 
 - WHEN `-y` flag is not set
@@ -95,7 +107,8 @@ Testing: unit
 - AND options include: Claude Code, GitHub Copilot, Cursor, Windsurf
 - AND Claude Code is pre-selected by default
 
-### Scenario: Skip prompts with -y flag [LSP.cli.fresh-init.skip-prompts]
+### Scenario: Skip prompts with -y flag [LIV.cli.fresh-init.skip-prompts]
+
 Testing: unit
 
 - WHEN `-y` flag is set
@@ -104,14 +117,16 @@ Testing: unit
 - AND AGENTS.md is injected if it exists
 - AND Claude Code tool command is created
 
-### Scenario: Cancel on escape [LSP.cli.fresh-init.cancel]
+### Scenario: Cancel on escape [LIV.cli.fresh-init.cancel]
+
 Testing: unit
 
 - WHEN user cancels any prompt (Ctrl+C or Escape)
 - THEN CLI shows "Cancelled." message
 - AND exits without making changes
 
-### Scenario: Show next steps after init [LSP.cli.fresh-init.next-steps]
+### Scenario: Show next steps after init [LIV.cli.fresh-init.next-steps]
+
 Testing: unit
 
 - WHEN initialization completes successfully
@@ -120,7 +135,8 @@ Testing: unit
 - AND includes "Add specs in livespec/projects/"
 - AND includes "Read livespec/livespec.md for the full workflow"
 
-### Scenario: Show errors if any [LSP.cli.fresh-init.errors]
+### Scenario: Show errors if any [LIV.cli.fresh-init.errors]
+
 Testing: unit
 
 - WHEN initialization encounters errors (e.g., permission denied)
@@ -129,18 +145,20 @@ Testing: unit
 
 ---
 
-## Update Mode [LSP.cli.update]
+## Update Mode [LIV.cli.update]
 
 Runs when `livespec/livespec.md` already exists.
 
-### Scenario: Detect initialized project [LSP.cli.update.detection]
+### Scenario: Detect initialized project [LIV.cli.update.detection]
+
 Testing: unit
 
 - WHEN `livespec/` directory exists
 - AND `livespec/livespec.md` exists
 - THEN CLI enters update mode
 
-### Scenario: Prompt for update action [LSP.cli.update.prompt]
+### Scenario: Prompt for update action [LIV.cli.update.prompt]
+
 Testing: unit
 
 - WHEN in update mode
@@ -148,42 +166,48 @@ Testing: unit
 - THEN CLI prompts "Livespec is already initialized. What would you like to do?"
 - AND options are: "Update base files", "Cancel"
 
-### Scenario: Cancel update [LSP.cli.update.cancel]
+### Scenario: Cancel update [LIV.cli.update.cancel]
+
 Testing: unit
 
 - WHEN user selects "Cancel"
 - THEN CLI shows "Cancelled." message
 - AND exits without making changes
 
-### Scenario: Skip prompt with -y flag [LSP.cli.update.skip-prompt]
+### Scenario: Skip prompt with -y flag [LIV.cli.update.skip-prompt]
+
 Testing: unit
 
 - WHEN in update mode
 - AND `-y` flag is set
 - THEN update proceeds without prompting
 
-### Scenario: Detect installed tools [LSP.cli.update.detect-tools]
+### Scenario: Detect installed tools [LIV.cli.update.detect-tools]
+
 Testing: unit
 
 - WHEN update runs
 - THEN CLI detects which AI tools have command files installed
 - AND updates only those tools' command files
 
-### Scenario: Detect injected sections [LSP.cli.update.detect-sections]
+### Scenario: Detect injected sections [LIV.cli.update.detect-sections]
+
 Testing: unit
 
 - WHEN update runs
 - THEN CLI detects which files have livespec sections
 - AND updates only those files' sections
 
-### Scenario: Report update results [LSP.cli.update.results]
+### Scenario: Report update results [LIV.cli.update.results]
+
 Testing: unit
 
 - WHEN update completes
 - AND files were updated
 - THEN CLI shows "Updated N files."
 
-### Scenario: Report no changes [LSP.cli.update.no-changes]
+### Scenario: Report no changes [LIV.cli.update.no-changes]
+
 Testing: unit
 
 - WHEN update completes
