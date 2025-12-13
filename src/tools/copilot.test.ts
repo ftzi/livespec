@@ -22,7 +22,7 @@ describe("GitHub Copilot", () => {
 		init({ cwd: TEST_DIR, tools: ["copilot"] })
 		const content = readFileSync(join(TEST_DIR, ".github/prompts/livespec.prompt.md"), "utf-8")
 		expect(content).toContain("Livespec")
-		expect(content).toContain("manifest.md")
+		expect(content).toContain("livespec/livespec.md")
 	})
 
 	it("detects installation", () => {

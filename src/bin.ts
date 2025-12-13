@@ -132,9 +132,9 @@ function showNextSteps(selectedTools: AITool[]): void {
 		selectedTools.length > 0
 			? `1. Run ${commandExample} in ${toolNames} to populate project details
 2. Add specs in livespec/projects/
-3. Read livespec/AGENTS.md for the full workflow`
+3. Read livespec/livespec.md for the full workflow`
 			: `1. Add specs in livespec/projects/
-2. Read livespec/AGENTS.md for the full workflow`
+2. Read livespec/livespec.md for the full workflow`
 
 	p.note(nextSteps, "Next steps")
 }

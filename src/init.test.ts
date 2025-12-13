@@ -48,14 +48,9 @@ describe("livespec init", () => {
 	})
 
 	describe("file creation", () => {
-		it("creates livespec/AGENTS.md", () => {
+		it("creates livespec/livespec.md", () => {
 			init({ cwd: TEST_DIR })
-			expect(existsSync(join(TEST_DIR, "livespec/AGENTS.md"))).toBe(true)
-		})
-
-		it("creates livespec/manifest.md", () => {
-			init({ cwd: TEST_DIR })
-			expect(existsSync(join(TEST_DIR, "livespec/manifest.md"))).toBe(true)
+			expect(existsSync(join(TEST_DIR, "livespec/livespec.md"))).toBe(true)
 		})
 
 		it("creates project.md from template", () => {
@@ -70,34 +65,34 @@ describe("livespec init", () => {
 		})
 	})
 
-	describe("livespec/AGENTS.md content", () => {
+	describe("livespec/livespec.md content", () => {
 		it("contains philosophy section", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("## Philosophy")
 		})
 
 		it("contains decision tree", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("Decision Tree")
 		})
 
 		it("contains plan file format", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("## Plan File Format")
 		})
 
 		it("contains spec file format", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("## Spec File Format")
 		})
 
 		it("contains testing declaration info", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("Testing:")
 			expect(content).toContain("unit")
 			expect(content).toContain("e2e")
@@ -105,13 +100,13 @@ describe("livespec init", () => {
 
 		it("contains housekeeping section", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("Housekeeping")
 		})
 
 		it("contains livespec mode section", () => {
 			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 			expect(content).toContain("Livespec Mode")
 		})
 	})
@@ -120,25 +115,25 @@ describe("livespec init", () => {
 		it("skips existing files when skipExisting is true", () => {
 			init({ cwd: TEST_DIR, projectName: "first" })
 
-			const agentsMdPath = join(TEST_DIR, "livespec/AGENTS.md")
-			writeFileSync(agentsMdPath, "Custom content")
+			const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+			writeFileSync(livespecMdPath, "Custom content")
 
 			const result = init({ cwd: TEST_DIR, projectName: "second", skipExisting: true })
 
-			expect(readFileSync(agentsMdPath, "utf-8")).toBe("Custom content")
-			expect(result.skipped).toContain(agentsMdPath)
+			expect(readFileSync(livespecMdPath, "utf-8")).toBe("Custom content")
+			expect(result.skipped).toContain(livespecMdPath)
 		})
 
 		it("overwrites existing files when skipExisting is false", () => {
 			init({ cwd: TEST_DIR })
 
-			const agentsMdPath = join(TEST_DIR, "livespec/AGENTS.md")
-			writeFileSync(agentsMdPath, "Custom content")
+			const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+			writeFileSync(livespecMdPath, "Custom content")
 
 			const result = init({ cwd: TEST_DIR, skipExisting: false })
 
-			expect(readFileSync(agentsMdPath, "utf-8")).not.toBe("Custom content")
-			expect(result.updated).toContain(agentsMdPath)
+			expect(readFileSync(livespecMdPath, "utf-8")).not.toBe("Custom content")
+			expect(result.updated).toContain(livespecMdPath)
 		})
 	})
 
@@ -148,8 +143,7 @@ describe("livespec init", () => {
 
 			expect(result.created.length).toBeGreaterThan(0)
 			expect(result.created.some((f) => f.includes("livespec"))).toBe(true)
-			expect(result.created.some((f) => f.includes("AGENTS.md"))).toBe(true)
-			expect(result.created.some((f) => f.includes("manifest.md"))).toBe(true)
+			expect(result.created.some((f) => f.includes("livespec.md"))).toBe(true)
 			expect(result.created.some((f) => f.includes("project.md"))).toBe(true)
 		})
 
@@ -184,9 +178,9 @@ describe("livespec init", () => {
 			expect(isInitialized(TEST_DIR)).toBe(false)
 		})
 
-		it("returns false without livespec/AGENTS.md", () => {
+		it("returns false without livespec/livespec.md", () => {
 			mkdirSync(join(TEST_DIR, "livespec"))
-			writeFileSync(join(TEST_DIR, "livespec/manifest.md"), "# Manifest")
+			writeFileSync(join(TEST_DIR, "livespec/project.md"), "# Project")
 			expect(isInitialized(TEST_DIR)).toBe(false)
 		})
 
@@ -197,7 +191,7 @@ describe("livespec init", () => {
 
 		it("returns true with minimal livespec structure", () => {
 			mkdirSync(join(TEST_DIR, "livespec"))
-			writeFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "# Agents")
+			writeFileSync(join(TEST_DIR, "livespec/livespec.md"), "# Livespec")
 			expect(isInitialized(TEST_DIR)).toBe(true)
 		})
 	})
@@ -210,12 +204,12 @@ describe("livespec init", () => {
 
 		it("defaults skipExisting to true", () => {
 			init({ cwd: TEST_DIR })
-			const agentsMdPath = join(TEST_DIR, "livespec/AGENTS.md")
-			writeFileSync(agentsMdPath, "Custom")
+			const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+			writeFileSync(livespecMdPath, "Custom")
 
 			init({ cwd: TEST_DIR }) // no skipExisting specified
 
-			expect(readFileSync(agentsMdPath, "utf-8")).toBe("Custom")
+			expect(readFileSync(livespecMdPath, "utf-8")).toBe("Custom")
 		})
 
 		it("defaults injectClaudeMd to false", () => {

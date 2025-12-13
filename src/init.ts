@@ -93,13 +93,9 @@ export function init(options: InitOptions = {}): InitResult {
 		}
 	}
 
-	// Copy AGENTS.md template
-	const agentsMdPath = join(livespecDir, "AGENTS.md")
-	writeFileIfNotExists({ filePath: agentsMdPath, content: readTemplate("AGENTS.md"), skipExisting, result })
-
-	// Copy manifest.md template
-	const manifestPath = join(livespecDir, "manifest.md")
-	writeFileIfNotExists({ filePath: manifestPath, content: readTemplate("manifest.md"), skipExisting, result })
+	// Copy livespec.md template
+	const livespecMdPath = join(livespecDir, "livespec.md")
+	writeFileIfNotExists({ filePath: livespecMdPath, content: readTemplate("livespec.md"), skipExisting, result })
 
 	// Copy project.md template
 	const projectMdPath = join(projectDir, "project.md")
@@ -198,6 +194,7 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 	const config = AI_TOOLS[tool]
 	const commandDir = join(cwd, config.commandDir)
 	const commandPath = join(commandDir, config.commandFile)
+	const housekeepingCommandPath = join(commandDir, config.housekeepingCommandFile)
 
 	// Create command directory if it doesn't exist
 	if (!existsSync(commandDir)) {
@@ -210,9 +207,13 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 		}
 	}
 
-	// Write command file
+	// Write main command file
 	const commandContent = readTemplate("commands/livespec.md")
 	writeFileIfNotExists({ filePath: commandPath, content: commandContent, skipExisting, result })
+
+	// Write housekeeping command file
+	const housekeepingContent = readTemplate("commands/livespec-housekeeping.md")
+	writeFileIfNotExists({ filePath: housekeepingCommandPath, content: housekeepingContent, skipExisting, result })
 }
 
 /**
@@ -220,8 +221,8 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
  */
 export function isInitialized(cwd: string = process.cwd()): boolean {
 	const livespecDir = join(cwd, "livespec")
-	const agentsMdPath = join(livespecDir, "AGENTS.md")
-	return existsSync(livespecDir) && existsSync(agentsMdPath)
+	const livespecMdPath = join(livespecDir, "livespec.md")
+	return existsSync(livespecDir) && existsSync(livespecMdPath)
 }
 
 export type UpdateBaseFilesOptions = {
@@ -246,7 +247,7 @@ export function detectInstalledTools(cwd: string = process.cwd()): AITool[] {
 }
 
 /**
- * Update base files (AGENTS.md, manifest.md) and optionally update root CLAUDE.md/AGENTS.md sections.
+ * Update base files (livespec.md) and optionally update root CLAUDE.md/AGENTS.md sections.
  */
 export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResult {
 	const { cwd = process.cwd(), injectClaudeMd = false, injectAgentsMd = false, tools = [] } = options
@@ -260,13 +261,9 @@ export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResul
 
 	const livespecDir = join(cwd, "livespec")
 
-	// Update livespec/AGENTS.md
-	const livespecAgentsMdPath = join(livespecDir, "AGENTS.md")
-	updateFileIfChanged({ filePath: livespecAgentsMdPath, newContent: readTemplate("AGENTS.md"), result })
-
-	// Update livespec/manifest.md
-	const manifestPath = join(livespecDir, "manifest.md")
-	updateFileIfChanged({ filePath: manifestPath, newContent: readTemplate("manifest.md"), result })
+	// Update livespec/livespec.md
+	const livespecMdPath = join(livespecDir, "livespec.md")
+	updateFileIfChanged({ filePath: livespecMdPath, newContent: readTemplate("livespec.md"), result })
 
 	// Update root CLAUDE.md section
 	if (injectClaudeMd) {
@@ -290,9 +287,16 @@ export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResul
 
 function updateToolCommand({ cwd, tool, result }: { cwd: string; tool: AITool; result: InitResult }): void {
 	const config = AI_TOOLS[tool]
+
+	// Update main command
 	const commandPath = join(cwd, config.commandDir, config.commandFile)
 	const commandContent = readTemplate("commands/livespec.md")
 	updateFileIfChanged({ filePath: commandPath, newContent: commandContent, result })
+
+	// Update housekeeping command
+	const housekeepingPath = join(cwd, config.commandDir, config.housekeepingCommandFile)
+	const housekeepingContent = readTemplate("commands/livespec-housekeeping.md")
+	updateFileIfChanged({ filePath: housekeepingPath, newContent: housekeepingContent, result })
 }
 
 type UpdateFileOptions = {

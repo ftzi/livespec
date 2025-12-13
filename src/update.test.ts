@@ -8,34 +8,21 @@ describe("updateBaseFiles", () => {
 	beforeEach(setupTestDir)
 	afterEach(cleanupTestDir)
 
-	it("updates livespec/AGENTS.md with latest template", () => {
+	it("updates livespec/livespec.md with latest template", () => {
 		// Initialize first
 		init({ cwd: TEST_DIR })
 
-		// Modify AGENTS.md
-		const agentsMdPath = join(TEST_DIR, "livespec/AGENTS.md")
-		writeFileSync(agentsMdPath, "# Old content")
+		// Modify livespec.md
+		const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+		writeFileSync(livespecMdPath, "# Old content")
 
 		// Update
 		const result = updateBaseFiles({ cwd: TEST_DIR })
 
-		const content = readFileSync(agentsMdPath, "utf-8")
+		const content = readFileSync(livespecMdPath, "utf-8")
 		expect(content).toContain("## Philosophy")
 		expect(content).not.toContain("# Old content")
-		expect(result.updated).toContain(agentsMdPath)
-	})
-
-	it("updates livespec/manifest.md with latest template", () => {
-		init({ cwd: TEST_DIR })
-
-		const manifestPath = join(TEST_DIR, "livespec/manifest.md")
-		writeFileSync(manifestPath, "# Old manifest")
-
-		const result = updateBaseFiles({ cwd: TEST_DIR })
-
-		const content = readFileSync(manifestPath, "utf-8")
-		expect(content).not.toContain("# Old manifest")
-		expect(result.updated).toContain(manifestPath)
+		expect(result.updated).toContain(livespecMdPath)
 	})
 
 	it("skips files that are already up to date", () => {
@@ -117,27 +104,16 @@ describe("updateBaseFiles", () => {
 		expect(content).toBe("# Untouched")
 	})
 
-	it("creates missing livespec/AGENTS.md", () => {
+	it("creates missing livespec/livespec.md", () => {
 		init({ cwd: TEST_DIR })
 
-		// Delete AGENTS.md
-		rmSync(join(TEST_DIR, "livespec/AGENTS.md"))
+		// Delete livespec.md
+		rmSync(join(TEST_DIR, "livespec/livespec.md"))
 
 		const result = updateBaseFiles({ cwd: TEST_DIR })
 
-		expect(existsSync(join(TEST_DIR, "livespec/AGENTS.md"))).toBe(true)
-		expect(result.created).toContain(join(TEST_DIR, "livespec/AGENTS.md"))
-	})
-
-	it("creates missing livespec/manifest.md", () => {
-		init({ cwd: TEST_DIR })
-
-		rmSync(join(TEST_DIR, "livespec/manifest.md"))
-
-		const result = updateBaseFiles({ cwd: TEST_DIR })
-
-		expect(existsSync(join(TEST_DIR, "livespec/manifest.md"))).toBe(true)
-		expect(result.created).toContain(join(TEST_DIR, "livespec/manifest.md"))
+		expect(existsSync(join(TEST_DIR, "livespec/livespec.md"))).toBe(true)
+		expect(result.created).toContain(join(TEST_DIR, "livespec/livespec.md"))
 	})
 
 	it("preserves content outside livespec markers in root files", () => {

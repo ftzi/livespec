@@ -11,7 +11,7 @@ Brief description of what this project does.
 ## Codebase
 
 - **Location:** `src/`
-- **Spec Code:** PRJ
+- **Spec Code:** PRJ (must be exactly 3 uppercase letters)
 
 ## Domain Knowledge
 

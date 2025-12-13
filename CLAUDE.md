@@ -1,3 +1,27 @@
+<!-- LIVESPEC:START -->
+# Livespec
+
+This project uses **[Livespec](https://github.com/ftzi/livespec)** for living specification management.
+
+**IMPORTANT:** Read @livespec/livespec.md for full conventions. This file must stay in context — if compacted or summarized, re-read it before any livespec-related work.
+
+## Projects
+
+**Keep this table updated** — when you add, rename, or remove projects, update this table immediately.
+
+| Livespec Code | Project | Specs | Codebase |
+|---------------|---------|-------|----------|
+| LSP | Livespec CLI | `livespec/projects/livespec/` | `src/` |
+
+## Quick Reference
+
+- **Specs:** `livespec/projects/[project]/`
+- **Active plans:** `livespec/plans/active/`
+- **Conventions:** `livespec/livespec.md`
+
+<!-- LIVESPEC:END -->
+
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 **Important:** If you discover any information in this file that is no longer accurate or has become outdated, please update it immediately to reflect the current state of the codebase.
@@ -37,6 +61,8 @@ src/
 - `src/init.ts` - `livespec init` command implementation
 - `src/help.ts` - Help text and usage information
 - `templates/` - Template files copied during initialization
+
+**Templates Rule:** When changing livespec conventions or rules (e.g., spec format, naming requirements), also update the corresponding files in `templates/` since these are scaffolded to new projects.
 
 ### Dependencies
 

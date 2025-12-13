@@ -57,8 +57,7 @@ Each project has a 3-character code prefix for spec IDs.
 
 ```
 livespec/
-├── AGENTS.md              # This file - AI instructions
-├── manifest.md            # Projects registry + housekeeping state
+├── livespec.md            # This file - AI instructions
 ├── projects/
 │   └── [project-name]/
 │       ├── project.md     # Project context, codebase location, domain knowledge
@@ -177,18 +176,6 @@ Valid test types:
 - `unit` — Unit tests (fast, isolated)
 - `e2e` — End-to-end tests (browser, full flow)
 - `integration` — Integration tests (API, database)
-
-### Promote Markers (Plans Only)
-
-When implementing from plans, mark scenarios ready for promotion:
-
-```markdown
-### Scenario: New feature [PRJ.feature.new]
-Testing: e2e
-Promote: ready
-```
-
-Values: `ready` | `pending` | `blocked`
 
 ## Test Discovery
 
@@ -358,20 +345,19 @@ For significant features or changes:
 
 ### 3. Housekeeping
 
-Manual routine to keep specs healthy. Run periodically or when requested.
+Run `/livespec-housekeeping` periodically to keep specs healthy.
 
 **Housekeeping checks:**
 1. **Spec validity** — All specs parse correctly, have required fields
-2. **Code-spec sync** — Behaviors match, no orphaned code
-3. **Test coverage** — Each scenario has test with matching type
-4. **Promote ready** — Move specs marked `ready` from plans to main specs
-5. **Stale specs** — Flag specs that haven't been verified recently
+2. **Test coverage** — Each scenario has test with matching type
+3. **Auto-promote** — When plan tasks are all done, promote its specs to main
+4. **Auto-archive** — Move completed plans (all tasks checked) to `archived/`
 
 **Housekeeping outputs:**
-- Update `manifest.md` with timestamp, commit, findings
-- Create housekeeping plans for discovered issues
-- Safe auto-fixes: move promoted specs, update timestamps
-- Proposals for human decision: code/spec mismatches, orphaned behaviors
+- Report on spec validity and test coverage
+- Automatically promote ready specs
+- Automatically archive completed plans
+- List actions needed (missing tests, malformed specs)
 
 ## Best Practices
 
@@ -461,7 +447,6 @@ Scenario declares `Testing: e2e` but:
 ## Quick Reference
 
 ### File Purposes
-- `manifest.md` — Projects list, housekeeping state
 - `project.md` — Project context, codebase location, entry points overview
 - `spec.md` — Feature specs (context + scenarios)
 - `plan.md` — Change proposals (why + tasks + design)
@@ -507,10 +492,8 @@ Testing: e2e
 - THEN outcome
 ```
 
-### Commands (AI-Driven)
-- "Run housekeeping" — Trigger full housekeeping routine
-- "Check spec coverage" — Find specs missing tests
-- "Promote ready specs" — Move ready specs from plans
-- "Create plan for X" — Scaffold new plan
+### Commands
+- `/livespec` — Project companion: shows status, offers suggestions, helps plan and implement features
+- `/livespec-housekeeping` — Validate specs, check test coverage, auto-promote and archive completed plans
 
 Remember: Specs are living. Code evolves. Keep them in sync.

@@ -95,7 +95,7 @@ describe("root AGENTS.md injection", () => {
 		expect(content).toContain("# My agents instructions")
 	})
 
-	it("keeps livespec/AGENTS.md separate from root AGENTS.md", () => {
+	it("keeps livespec/livespec.md separate from root AGENTS.md", () => {
 		writeFileSync(join(TEST_DIR, "AGENTS.md"), "# Root agents")
 		init({ cwd: TEST_DIR, injectAgentsMd: true })
 
@@ -104,8 +104,8 @@ describe("root AGENTS.md injection", () => {
 		expect(rootContent).toContain("<!-- LIVESPEC:START -->")
 		expect(rootContent).toContain("# Root agents")
 
-		// livespec/AGENTS.md has full template (no markers, different content)
-		const livespecContent = readFileSync(join(TEST_DIR, "livespec/AGENTS.md"), "utf-8")
+		// livespec/livespec.md has full template (no markers, different content)
+		const livespecContent = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
 		expect(livespecContent).toContain("## Philosophy")
 		expect(livespecContent).not.toContain("# Root agents")
 	})
