@@ -122,10 +122,10 @@ describe("livespec init", () => {
 			expect(content).toContain("e2e")
 		})
 
-		it("contains housekeeping section", () => {
+		it("contains sync section", () => {
 			init({ cwd: TEST_DIR })
 			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("Housekeeping")
+			expect(content).toContain("### 3. Sync")
 		})
 
 		it("contains livespec mode section", () => {

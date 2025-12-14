@@ -1,4 +1,4 @@
-# Livespec Housekeeping
+# Livespec Sync
 
 Verify specs are valid, in sync with code, and have test coverage. Automatically promote ready specs and archive completed plans.
 
@@ -43,7 +43,7 @@ For each plan in `livespec/plans/active/`:
 
 Output a summary:
 ```
-## Housekeeping Report
+## Sync Report
 
 ### Spec Validity
 - ✓ 12 specs valid

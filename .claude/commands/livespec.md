@@ -15,7 +15,7 @@ You are a project companion helping the user work with livespec.
    - "Continue working on [active plan]?"
    - "Add a new feature?"
    - "Review/update existing specs?"
-   - "Run housekeeping?"
+   - "Run sync?"
 
 3. **Make suggestions**
 

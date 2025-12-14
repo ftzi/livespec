@@ -11,7 +11,7 @@ Livespec treats specifications as **living documentation** that evolves with cod
 - **Specs are the target**, not the absolute truth — code can be updated first, specs reconciled later
 - **Bidirectional sync** — specs drive code, code informs specs
 - **Context-rich** — specs include the "why", not just the "what"
-- **AI-native** — housekeeping and maintenance done by AI, not scripts
+- **AI-native** — sync and maintenance done by AI, not scripts
 - **Test-linked** — every scenario declares its test type, tests reference specs
 - **Feature-centric** — one spec per feature, containing screens + modals + logic
 
@@ -24,7 +24,7 @@ Livespec treats specifications as **living documentation** that evolves with cod
 | **Spec ID** | Unique identifier like `[PRJ.sidebar.tabs]` linking specs ↔ tests ↔ code |
 | **Feature** | A cohesive capability including its screens, modals, and logic |
 | **Plan** | A proposal for changes, lives in `plans/active/` until complete |
-| **Housekeeping** | Periodic sync check between specs, code, and tests |
+| **Sync** | Periodic check between specs, code, and tests |
 | **Entry point** | A route or action where users begin interacting with a feature |
 
 ## TL;DR Quick Checklist
@@ -34,7 +34,7 @@ Livespec treats specifications as **living documentation** that evolves with cod
 - Spec IDs inline with headers: `## Feature Name [PRJ.feature.name]`
 - Reference in code/tests: `/** @spec [PRJ.sidebar.tabs-display] */`
 - Every scenario declares: `Testing: e2e` or `Testing: unit`
-- Run housekeeping periodically to keep specs in sync
+- Run sync periodically to keep specs aligned
 - **NEVER** expect manual testing — all scenarios must be automatically testable
 
 ## Before Any Task
@@ -120,8 +120,7 @@ Narrative explanation of what this feature is and why it exists.
 
 ## UI
 
-Brief description of layout, key components, available actions.
-Not testable, but provides context for understanding scenarios.
+Layout structure, components, and available actions. Describe what elements exist and how they're arranged. UI structure is testable — scenarios can verify element presence, arrangement, and contents.
 
 ## Design Decisions
 
@@ -151,11 +150,44 @@ Testing: unit
 ### Optional Sections
 
 - **Entry Points** — Where users access this feature (routes, triggers)
-- **UI** — Layout description, key components, actions
+- **UI** — Layout structure, components, arrangement (testable via scenarios)
 - **Design Decisions** — Rationale for non-obvious choices
 - **Modals** — Modal dialogs owned by this feature
 
 Include sections as needed. Small features may only need scenarios.
+
+### UI Layout Example
+
+```markdown
+## UI
+
+### Sidebar
+
+- **Position:** Left edge, full height
+- **Logo:** Top
+- **Navigation items:** Dashboard, Orders, Settings (vertical list with icons)
+- **Profile section:** Bottom
+  - User avatar (left)
+  - Username (right)
+  - Click → opens profile menu
+
+### Profile Menu
+
+Appears on profile section click. Contains: View Profile, Settings, Logout.
+```
+
+These descriptions are verified by scenarios:
+
+```markdown
+### Scenario: Sidebar displays profile section [PRJ.sidebar.profile-display]
+
+Testing: e2e
+
+- GIVEN user is logged in
+- THEN sidebar shows profile section at bottom
+- AND profile section displays user avatar on the left
+- AND profile section displays username on the right
+```
 
 ### Spec IDs
 
@@ -189,7 +221,7 @@ Tests reference specs via `@spec` JSDoc comments:
 it('shows all exports as tabs', () => { ... })
 ```
 
-Housekeeping discovers coverage by:
+Sync discovers coverage by:
 1. Finding all `[PRJ.id]` declarations in spec files
 2. Searching test files for `@spec [PRJ.id]` annotations
 3. Checking if test file type matches declared `Testing:` type
@@ -318,7 +350,7 @@ The workflow is continuous — archiving happens automatically when all tasks co
 
 ### 1. Regular Development (Spec-Aware)
 
-When making code changes, be a "mini-housekeeper":
+When making code changes, stay spec-aware:
 
 1. **Before coding:** Check if relevant specs exist in `livespec/projects/[project]/`
 2. **While coding:** If behavior changes, note that specs may need updating
@@ -344,17 +376,17 @@ For significant features or changes:
 
 5. **Archive automatically:** When all tasks complete, move plan to `plans/archived/YYYY-MM-DD-[plan-name]/`
 
-### 3. Housekeeping
+### 3. Sync
 
 Run `/livespec-sync` periodically to keep specs healthy.
 
-**Housekeeping checks:**
+**Sync checks:**
 1. **Spec validity** — All specs parse correctly, have required fields
 2. **Test coverage** — Each scenario has test with matching type
 3. **Auto-promote** — When plan tasks are all done, promote its specs to main
 4. **Auto-archive** — Move completed plans (all tasks checked) to `archived/`
 
-**Housekeeping outputs:**
+**Sync outputs:**
 - Report on spec validity and test coverage
 - Automatically promote ready specs
 - Automatically archive completed plans
@@ -396,7 +428,7 @@ Only add complexity when you have:
 
 - Specs are living documents — update them when behavior changes
 - Don't let specs become stale documentation
-- Regular housekeeping prevents drift
+- Regular sync prevents drift
 - When in doubt, check the spec before coding
 
 ### What Belongs Where
@@ -409,7 +441,6 @@ Only add complexity when you have:
 | UI conventions ("use X component") | `project.md` |
 | Domain knowledge, gotchas | `project.md` |
 | Permission groups | `project.md` |
-| Component library docs | Storybook, **not** livespec |
 
 ## Tool Selection Guide
 
@@ -425,16 +456,16 @@ Only add complexity when you have:
 
 ### Spec-Code Mismatch
 
-When housekeeping finds mismatches:
+When sync finds mismatches:
 1. Determine which is correct (spec or code)
 2. If spec is correct → fix code
 3. If code is correct → update spec
-4. Document the decision in the housekeeping plan
+4. Document the decision in the sync plan
 
 ### Orphaned Behavior
 
 Code behavior not documented in specs:
-1. Housekeeping creates draft spec proposal
+1. Sync creates draft spec proposal
 2. Review if behavior is intentional
 3. If intentional → promote draft to main specs
 4. If unintentional → consider removing code
@@ -442,8 +473,8 @@ Code behavior not documented in specs:
 ### Missing or Wrong Test Type
 
 Scenario declares `Testing: e2e` but:
-- No test found → housekeeping reports missing
-- Test found in unit files → housekeeping reports type mismatch
+- No test found → sync reports missing
+- Test found in unit files → sync reports type mismatch
 
 ## Quick Reference
 
