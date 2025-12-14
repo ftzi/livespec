@@ -4,10 +4,9 @@
 <br/>
 <br/>
 <p align="center">
-  <img src="logo.svg"  height="60" alt="Livespec logo">
+  <img src="logo.svg"  width="400" alt="Livespec logo">
 </p>
 <br/>
-
 <p align="center">
   <strong>Next-gen spec-driven development.</strong><br>
   Specifications that evolve with your code. Documentation that stays true.
