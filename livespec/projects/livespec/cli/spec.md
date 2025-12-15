@@ -30,23 +30,17 @@ The default project name is derived from the current directory name, avoiding an
 
 ### Scenario: Show help with -h flag [LIV.cli.help.short-flag]
 
-Testing: unit
-
 - WHEN user runs `livespec -h`
 - THEN help text is displayed
 - AND process exits without error
 
 ### Scenario: Show help with --help flag [LIV.cli.help.long-flag]
 
-Testing: unit
-
 - WHEN user runs `livespec --help`
 - THEN help text is displayed
 - AND process exits without error
 
 ### Scenario: Help text content [LIV.cli.help.content]
-
-Testing: unit
 
 - WHEN help is displayed
 - THEN it shows usage: `npx livespec [options]`
@@ -61,22 +55,16 @@ Runs when `livespec/livespec.md` does not exist.
 
 ### Scenario: Detect fresh project [LIV.cli.fresh-init.detection]
 
-Testing: unit
-
 - WHEN `livespec/` directory does not exist
 - THEN CLI enters fresh initialization mode
 
 ### Scenario: Detect fresh with partial structure [LIV.cli.fresh-init.partial]
-
-Testing: unit
 
 - WHEN `livespec/` directory exists
 - AND `livespec/livespec.md` does not exist
 - THEN CLI enters fresh initialization mode
 
 ### Scenario: Prompt for injection targets [LIV.cli.fresh-init.injection-prompt]
-
-Testing: unit
 
 - WHEN CLAUDE.md exists in project root
 - AND AGENTS.md exists in project root
@@ -86,21 +74,15 @@ Testing: unit
 
 ### Scenario: Only show existing files in injection prompt [LIV.cli.fresh-init.injection-existing-only]
 
-Testing: unit
-
 - WHEN CLAUDE.md exists but AGENTS.md does not
 - THEN injection prompt only shows CLAUDE.md option
 
 ### Scenario: Skip injection prompt when no files exist [LIV.cli.fresh-init.no-injection-files]
 
-Testing: unit
-
 - WHEN neither CLAUDE.md nor AGENTS.md exist
 - THEN injection prompt is skipped
 
 ### Scenario: Prompt for AI tools [LIV.cli.fresh-init.tools-prompt]
-
-Testing: unit
 
 - WHEN `-y` flag is not set
 - THEN CLI prompts "Setup /livespec command for:" with multiselect
@@ -108,8 +90,6 @@ Testing: unit
 - AND Claude Code is pre-selected by default
 
 ### Scenario: Skip prompts with -y flag [LIV.cli.fresh-init.skip-prompts]
-
-Testing: unit
 
 - WHEN `-y` flag is set
 - THEN no prompts are shown
@@ -119,15 +99,11 @@ Testing: unit
 
 ### Scenario: Cancel on escape [LIV.cli.fresh-init.cancel]
 
-Testing: unit
-
 - WHEN user cancels any prompt (Ctrl+C or Escape)
 - THEN CLI shows "Cancelled." message
 - AND exits without making changes
 
 ### Scenario: Show next steps after init [LIV.cli.fresh-init.next-steps]
-
-Testing: unit
 
 - WHEN initialization completes successfully
 - THEN CLI shows "Next steps" note
@@ -136,8 +112,6 @@ Testing: unit
 - AND includes "Read livespec/livespec.md for the full workflow"
 
 ### Scenario: Show errors if any [LIV.cli.fresh-init.errors]
-
-Testing: unit
 
 - WHEN initialization encounters errors (e.g., permission denied)
 - THEN errors are displayed to user
@@ -151,15 +125,11 @@ Runs when `livespec/livespec.md` already exists.
 
 ### Scenario: Detect initialized project [LIV.cli.update.detection]
 
-Testing: unit
-
 - WHEN `livespec/` directory exists
 - AND `livespec/livespec.md` exists
 - THEN CLI enters update mode
 
 ### Scenario: Prompt for update action [LIV.cli.update.prompt]
-
-Testing: unit
 
 - WHEN in update mode
 - AND `-y` flag is not set
@@ -168,15 +138,11 @@ Testing: unit
 
 ### Scenario: Cancel update [LIV.cli.update.cancel]
 
-Testing: unit
-
 - WHEN user selects "Cancel"
 - THEN CLI shows "Cancelled." message
 - AND exits without making changes
 
 ### Scenario: Skip prompt with -y flag [LIV.cli.update.skip-prompt]
-
-Testing: unit
 
 - WHEN in update mode
 - AND `-y` flag is set
@@ -184,15 +150,11 @@ Testing: unit
 
 ### Scenario: Detect installed tools [LIV.cli.update.detect-tools]
 
-Testing: unit
-
 - WHEN update runs
 - THEN CLI detects which AI tools have command files installed
 - AND updates only those tools' command files
 
 ### Scenario: Detect injected sections [LIV.cli.update.detect-sections]
-
-Testing: unit
 
 - WHEN update runs
 - THEN CLI detects which files have livespec sections
@@ -200,15 +162,11 @@ Testing: unit
 
 ### Scenario: Report update results [LIV.cli.update.results]
 
-Testing: unit
-
 - WHEN update completes
 - AND files were updated
 - THEN CLI shows "Updated N files."
 
 ### Scenario: Report no changes [LIV.cli.update.no-changes]
-
-Testing: unit
 
 - WHEN update completes
 - AND no files needed updating

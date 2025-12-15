@@ -19,13 +19,15 @@
 <br/>
 
 
-## 💡 The Idea
+## Overview
 
-Livespec ensures your software works as intended. Requirements from stakeholders become specs, specs become tests, tests prove the system behaves correctly.
+Livespec ensures your software works as intended. Requirements become specs, specs become tests, tests prove the system behaves correctly.
 
-Your AI reads specs before coding, implements what's specified, and validates that tests prove every scenario. When stakeholders ask "does it do X?" — the spec and its passing tests are the answer.
+**Language agnostic.** Works with any programming language, framework, or testing tool. Specs are Markdown, tests use whatever you prefer.
 
-### Why specs matter
+Your AI reads specs before coding, implements what's specified, and validates that tests prove every scenario. When someone asks "does it do X?" — the spec and its passing tests are the answer.
+
+### Why it matters
 
 **Specs define what your software should do.** Not how it's currently implemented — how it *should* behave. When every feature has a spec, you have a complete picture of your system's intended behavior.
 
@@ -96,8 +98,6 @@ User authentication for the application.
 
 ### Scenario: Successful login [APP.auth.login.success]
 
-Testing: unit
-
 - WHEN user enters valid credentials
 - AND clicks submit
 - THEN user is redirected to dashboard
@@ -112,7 +112,7 @@ it('redirects to dashboard after login', () => {
 })
 ```
 
-`Sync` finds scenarios without tests, tests without specs, and drift between what's documented and what's real.
+`/livespec-sync` finds scenarios without tests, tests without specs, and drift between what's documented and what's real.
 
 ---
 

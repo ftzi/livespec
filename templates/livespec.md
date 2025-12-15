@@ -33,7 +33,7 @@ Livespec treats specifications as **living documentation** that evolves with cod
 - Check relevant specs before making changes: `livespec/projects/[project]/`
 - Spec IDs inline with headers: `## Feature Name [PRJ.feature.name]`
 - Reference in code/tests: `/** @spec [PRJ.sidebar.tabs-display] */`
-- Every scenario declares: `Testing: e2e` or `Testing: unit`
+- Scenarios default to `Testing: unit` — only declare `Testing:` for e2e/integration
 - Run sync periodically to keep specs aligned
 - **NEVER** expect manual testing — all scenarios must be automatically testable
 
@@ -141,7 +141,6 @@ Testing: e2e
 - AND additional outcomes
 
 ### Scenario: Another behavior [PRJ.feature.requirement.other]
-Testing: unit
 
 - WHEN different condition
 - THEN different outcome
@@ -200,15 +199,17 @@ Testing: e2e
 
 ### Testing Declaration
 
-Every scenario declares its expected test type on the line after the header:
+**Unit tests are the default.** Only declare `Testing:` when using a different type:
 
 ```markdown
 ### Scenario: Tab display on navigation [PRJ.sidebar.tabs-display]
+
 Testing: e2e
 ```
 
 Valid test types:
-- `unit` — Unit tests (fast, isolated)
+
+- `unit` — Unit tests (fast, isolated) — **DEFAULT, don't declare**
 - `e2e` — End-to-end tests (browser, full flow)
 - `integration` — Integration tests (API, database)
 

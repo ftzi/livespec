@@ -22,15 +22,11 @@ Instead of prompting, update mode auto-detects which AI tools have command files
 
 ### Scenario: Update livespec.md [LIV.update.base-files.livespec-md]
 
-Testing: unit
-
 - WHEN livespec.md content differs from template
 - THEN file is overwritten with latest template
 - AND result.updated includes the file path
 
 ### Scenario: Update version in livespec.md [LIV.update.base-files.version]
-
-Testing: unit
 
 - WHEN livespec.md is updated
 - THEN version comment is updated to current package.json version
@@ -38,15 +34,11 @@ Testing: unit
 
 ### Scenario: Skip unchanged livespec.md [LIV.update.base-files.skip-unchanged]
 
-Testing: unit
-
 - WHEN livespec.md content matches template exactly
 - THEN file is not modified
 - AND result.skipped includes the file path
 
 ### Scenario: Create missing livespec.md [LIV.update.base-files.create-missing]
-
-Testing: unit
 
 - WHEN livespec.md does not exist
 - THEN file is created from template
@@ -58,8 +50,6 @@ Testing: unit
 
 ### Scenario: Update CLAUDE.md section [LIV.update.sections.claude]
 
-Testing: unit
-
 - WHEN injectClaudeMd: true
 - AND CLAUDE.md has outdated livespec section
 - THEN section is replaced with latest template
@@ -67,15 +57,11 @@ Testing: unit
 
 ### Scenario: Update AGENTS.md section [LIV.update.sections.agents]
 
-Testing: unit
-
 - WHEN injectAgentsMd: true
 - AND AGENTS.md has outdated livespec section
 - THEN section is replaced with latest template
 
 ### Scenario: Skip when not requested [LIV.update.sections.skip]
-
-Testing: unit
 
 - WHEN injectClaudeMd: false
 - THEN CLAUDE.md is not modified
@@ -87,15 +73,11 @@ Testing: unit
 
 ### Scenario: Update tool command file [LIV.update.tools.update]
 
-Testing: unit
-
 - WHEN tools includes "claude"
 - AND .claude/commands/livespec.md content differs from template
 - THEN file is overwritten with latest template
 
 ### Scenario: Skip unchanged command [LIV.update.tools.skip]
-
-Testing: unit
 
 - WHEN tools includes "claude"
 - AND .claude/commands/livespec.md matches template
@@ -103,8 +85,6 @@ Testing: unit
 - AND result.skipped includes the file path
 
 ### Scenario: Create missing command file [LIV.update.tools.create]
-
-Testing: unit
 
 - WHEN tools includes "claude"
 - AND .claude/commands/livespec.md does not exist
@@ -117,22 +97,16 @@ Testing: unit
 
 ### Scenario: Detect installed Claude command [LIV.update.detect-tools.claude]
 
-Testing: unit
-
 - WHEN `.claude/commands/livespec.md` exists
 - THEN detectInstalledTools returns array containing "claude"
 
 ### Scenario: Detect multiple tools [LIV.update.detect-tools.multiple]
-
-Testing: unit
 
 - WHEN `.claude/commands/livespec.md` exists
 - AND `.cursor/prompts/livespec.md` exists
 - THEN detectInstalledTools returns ["claude", "cursor"]
 
 ### Scenario: Detect no tools [LIV.update.detect-tools.none]
-
-Testing: unit
 
 - WHEN no tool command files exist
 - THEN detectInstalledTools returns empty array

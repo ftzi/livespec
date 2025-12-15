@@ -22,29 +22,21 @@ CLAUDE.md and AGENTS.md injection only works on existing files — livespec won'
 
 ### Scenario: Create livespec directory [LIV.init.directories.livespec]
 
-Testing: unit
-
 - WHEN init runs in a directory without `livespec/`
 - THEN `livespec/` directory is created
 - AND result.created includes the directory path
 
 ### Scenario: Create projects directory [LIV.init.directories.projects]
 
-Testing: unit
-
 - WHEN init runs
 - THEN `livespec/projects/` directory is created
 
 ### Scenario: Create project subdirectory [LIV.init.directories.project]
 
-Testing: unit
-
 - WHEN init runs with projectName "my-app"
 - THEN `livespec/projects/my-app/` directory is created
 
 ### Scenario: Create plans directories [LIV.init.directories.plans]
-
-Testing: unit
 
 - WHEN init runs
 - THEN `livespec/plans/` directory is created
@@ -53,14 +45,10 @@ Testing: unit
 
 ### Scenario: Default project name [LIV.init.directories.default-name]
 
-Testing: unit
-
 - WHEN init runs without projectName option
 - THEN project subdirectory is named "my-project"
 
 ### Scenario: Handle directory creation errors [LIV.init.directories.errors]
-
-Testing: unit
 
 - WHEN directory creation fails (e.g., permission denied)
 - THEN error is added to result.errors
@@ -72,23 +60,17 @@ Testing: unit
 
 ### Scenario: Create livespec.md [LIV.init.templates.livespec-md]
 
-Testing: unit
-
 - WHEN init runs
 - THEN `livespec/livespec.md` is created from template
 - AND file contains livespec instructions
 
 ### Scenario: Create project.md [LIV.init.templates.project-md]
 
-Testing: unit
-
 - WHEN init runs with projectName "my-app"
 - THEN `livespec/projects/my-app/project.md` is created from template
 - AND file contains project template content
 
 ### Scenario: Inject version into livespec.md [LIV.init.templates.version]
-
-Testing: unit
 
 - WHEN init runs
 - THEN `livespec/livespec.md` contains version comment
@@ -97,16 +79,12 @@ Testing: unit
 
 ### Scenario: Skip existing livespec.md [LIV.init.templates.skip-livespec]
 
-Testing: unit
-
 - WHEN init runs with skipExisting: true
 - AND `livespec/livespec.md` already exists
 - THEN file is not overwritten
 - AND result.skipped includes the file path
 
 ### Scenario: Overwrite existing when skipExisting false [LIV.init.templates.overwrite]
-
-Testing: unit
 
 - WHEN init runs with skipExisting: false
 - AND `livespec/livespec.md` already exists with custom content
@@ -121,8 +99,6 @@ Injects livespec section into CLAUDE.md or AGENTS.md.
 
 ### Scenario: Prepend section to existing file [LIV.init.injection.prepend]
 
-Testing: unit
-
 - WHEN injectClaudeMd: true
 - AND CLAUDE.md exists without livespec section
 - THEN livespec section is prepended to file
@@ -131,16 +107,12 @@ Testing: unit
 
 ### Scenario: Replace existing section [LIV.init.injection.replace]
 
-Testing: unit
-
 - WHEN injectClaudeMd: true
 - AND CLAUDE.md contains `<!-- LIVESPEC:START -->` and `<!-- LIVESPEC:END -->`
 - THEN content between markers is replaced with new section
 - AND content outside markers is preserved
 
 ### Scenario: Skip injection when section exists and skipExisting [LIV.init.injection.skip]
-
-Testing: unit
 
 - WHEN injectClaudeMd: true
 - AND skipExisting: true
@@ -150,8 +122,6 @@ Testing: unit
 
 ### Scenario: Skip injection when file doesn't exist [LIV.init.injection.no-file]
 
-Testing: unit
-
 - WHEN injectClaudeMd: true
 - AND CLAUDE.md does not exist
 - THEN no file is created
@@ -159,15 +129,11 @@ Testing: unit
 
 ### Scenario: Inject into AGENTS.md [LIV.init.injection.agents]
 
-Testing: unit
-
 - WHEN injectAgentsMd: true
 - AND AGENTS.md exists
 - THEN livespec section is added to AGENTS.md
 
 ### Scenario: Section content [LIV.init.injection.content]
-
-Testing: unit
 
 - WHEN section is injected
 - THEN it starts with `<!-- LIVESPEC:START -->`
@@ -184,35 +150,25 @@ Creates `/livespec` command files for AI coding assistants.
 
 ### Scenario: Create Claude Code command [LIV.init.tools.claude]
 
-Testing: unit
-
 - WHEN tools includes "claude"
 - THEN `.claude/commands/livespec.md` is created
 
 ### Scenario: Create GitHub Copilot command [LIV.init.tools.copilot]
-
-Testing: unit
 
 - WHEN tools includes "copilot"
 - THEN `.github/prompts/livespec.prompt.md` is created
 
 ### Scenario: Create Cursor command [LIV.init.tools.cursor]
 
-Testing: unit
-
 - WHEN tools includes "cursor"
 - THEN `.cursor/prompts/livespec.md` is created
 
 ### Scenario: Create Windsurf command [LIV.init.tools.windsurf]
 
-Testing: unit
-
 - WHEN tools includes "windsurf"
 - THEN `.windsurf/workflows/livespec.md` is created
 
 ### Scenario: Create command directory [LIV.init.tools.directory]
-
-Testing: unit
 
 - WHEN tools includes "claude"
 - AND `.claude/commands/` does not exist
@@ -220,8 +176,6 @@ Testing: unit
 - AND result.created includes the directory path
 
 ### Scenario: Skip existing command file [LIV.init.tools.skip]
-
-Testing: unit
 
 - WHEN tools includes "claude"
 - AND skipExisting: true
@@ -235,28 +189,20 @@ Testing: unit
 
 ### Scenario: Track created items [LIV.init.result.created]
 
-Testing: unit
-
 - WHEN init creates new directories and files
 - THEN result.created contains all created paths
 
 ### Scenario: Track skipped items [LIV.init.result.skipped]
-
-Testing: unit
 
 - WHEN init skips existing files
 - THEN result.skipped contains all skipped paths
 
 ### Scenario: Track updated items [LIV.init.result.updated]
 
-Testing: unit
-
 - WHEN init overwrites existing files
 - THEN result.updated contains all updated paths
 
 ### Scenario: Track errors [LIV.init.result.errors]
-
-Testing: unit
 
 - WHEN init encounters errors
 - THEN result.errors contains error messages
@@ -268,14 +214,10 @@ Testing: unit
 
 ### Scenario: Empty directory [LIV.init.is-initialized.empty]
 
-Testing: unit
-
 - WHEN directory has no livespec folder
 - THEN isInitialized returns false
 
 ### Scenario: Partial structure [LIV.init.is-initialized.partial]
-
-Testing: unit
 
 - WHEN `livespec/` exists
 - AND `livespec/livespec.md` does not exist
@@ -283,15 +225,11 @@ Testing: unit
 
 ### Scenario: Complete structure [LIV.init.is-initialized.complete]
 
-Testing: unit
-
 - WHEN `livespec/` exists
 - AND `livespec/livespec.md` exists
 - THEN isInitialized returns true
 
 ### Scenario: Minimal structure [LIV.init.is-initialized.minimal]
-
-Testing: unit
 
 - WHEN only `livespec/livespec.md` exists (no other files)
 - THEN isInitialized returns true
