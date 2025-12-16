@@ -25,7 +25,7 @@ describe("updateBaseFiles", () => {
 		const result = updateBaseFiles({ cwd: TEST_DIR })
 
 		const content = readFileSync(livespecMdPath, "utf-8")
-		expect(content).toContain("## Philosophy")
+		expect(content).toContain("## 1. Philosophy")
 		expect(content).not.toContain("# Old content")
 		expect(result.updated).toContain(livespecMdPath)
 	})

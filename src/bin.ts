@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
 import * as p from "@clack/prompts"
 import { LIVESPEC_START_MARKER } from "./consts"
-import { type AITool, detectInstalledTools, init, isInitialized, updateBaseFiles } from "./init"
+import { type AITool, detectInstalledTools, init, isInitialized, needsUpdate, updateBaseFiles } from "./init"
 import { AI_TOOLS, ALL_TOOLS } from "./tools/config"
 
 function getDefaultProjectName(): string {
@@ -48,9 +48,20 @@ Options:
 }
 
 async function handleUpdate(skipPrompts: boolean): Promise<void> {
+	const versionInfo = needsUpdate()
+
+	if (!versionInfo.needsUpdate) {
+		p.outro(`Already up to date (v${versionInfo.latestVersion}).`)
+		return
+	}
+
+	const versionMessage = versionInfo.currentVersion
+		? `Update available: v${versionInfo.currentVersion} → v${versionInfo.latestVersion}`
+		: `Version not found in livespec.md. Latest: v${versionInfo.latestVersion}`
+
 	if (!skipPrompts) {
 		const action = await p.select({
-			message: "Livespec is already initialized. What would you like to do?",
+			message: `${versionMessage}. What would you like to do?`,
 			options: [
 				{ value: "update", label: "Update base files" },
 				{ value: "cancel", label: "Cancel" },
@@ -72,8 +83,12 @@ async function handleUpdate(skipPrompts: boolean): Promise<void> {
 	})
 
 	const updated = result.updated.length
-	const unchanged = result.skipped.length
-	p.outro(updated > 0 ? `Updated ${updated} files.` : `All ${unchanged} files unchanged.`)
+	if (updated > 0) {
+		p.note("Run /livespec-setup to update project configuration.", "Next step")
+		p.outro(`Updated ${updated} files to v${versionInfo.latestVersion}.`)
+	} else {
+		p.outro("All files unchanged.")
+	}
 }
 
 async function promptForInjectionTargets(
@@ -125,12 +140,10 @@ async function promptForTools(): Promise<AITool[] | null> {
 
 function showNextSteps(selectedTools: AITool[]): void {
 	const toolNames = selectedTools.map((t) => AI_TOOLS[t].name).join(", ")
-	const firstTool = selectedTools[0]
-	const commandExample = firstTool ? AI_TOOLS[firstTool].commandExample : "/livespec"
 
 	const nextSteps =
 		selectedTools.length > 0
-			? `1. Run ${commandExample} in ${toolNames} to populate project details
+			? `1. Run /livespec-setup in ${toolNames} to configure projects
 2. Add specs in livespec/projects/
 3. Read livespec/livespec.md for the full workflow`
 			: `1. Add specs in livespec/projects/

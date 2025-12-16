@@ -8,10 +8,42 @@ export type { AITool }
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+const VERSION_REGEX = /<!--\s*livespec-version:\s*([\d.]+)\s*-->/
+
 function getVersion(): string {
 	const packageJsonPath = join(__dirname, "..", "package.json")
 	const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"))
 	return packageJson.version
+}
+
+/**
+ * Extract the livespec version from a livespec.md file.
+ * Returns null if version not found.
+ */
+export function extractLivespecVersion(filePath: string): string | null {
+	if (!existsSync(filePath)) return null
+	const content = readFileSync(filePath, "utf-8")
+	const match = content.match(VERSION_REGEX)
+	return match?.[1] ?? null
+}
+
+/**
+ * Check if livespec.md needs updating based on version comparison.
+ */
+export function needsUpdate(cwd: string = process.cwd()): {
+	needsUpdate: boolean
+	currentVersion: string | null
+	latestVersion: string
+} {
+	const livespecMdPath = join(cwd, "livespec", "livespec.md")
+	const currentVersion = extractLivespecVersion(livespecMdPath)
+	const latestVersion = getVersion()
+
+	return {
+		needsUpdate: currentVersion !== latestVersion,
+		currentVersion,
+		latestVersion,
+	}
 }
 
 export type InitOptions = {
@@ -203,6 +235,7 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 	const commandDir = join(cwd, config.commandDir)
 	const commandPath = join(commandDir, config.commandFile)
 	const syncCommandPath = join(commandDir, config.syncCommandFile)
+	const setupCommandPath = join(commandDir, config.setupCommandFile)
 
 	// Create command directory if it doesn't exist
 	if (!existsSync(commandDir)) {
@@ -222,6 +255,10 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 	// Write sync command file
 	const syncContent = readTemplate("commands/livespec-sync.md")
 	writeFileIfNotExists({ filePath: syncCommandPath, content: syncContent, skipExisting, result })
+
+	// Write setup command file
+	const setupContent = readTemplate("commands/livespec-setup.md")
+	writeFileIfNotExists({ filePath: setupCommandPath, content: setupContent, skipExisting, result })
 }
 
 /**
@@ -305,6 +342,11 @@ function updateToolCommand({ cwd, tool, result }: { cwd: string; tool: AITool; r
 	const syncPath = join(cwd, config.commandDir, config.syncCommandFile)
 	const syncContent = readTemplate("commands/livespec-sync.md")
 	updateFileIfChanged({ filePath: syncPath, newContent: syncContent, result })
+
+	// Update setup command
+	const setupPath = join(cwd, config.commandDir, config.setupCommandFile)
+	const setupContent = readTemplate("commands/livespec-setup.md")
+	updateFileIfChanged({ filePath: setupPath, newContent: setupContent, result })
 }
 
 type UpdateFileOptions = {

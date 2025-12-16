@@ -1,3 +1,5 @@
+The following LIVESPEC section is injected by the @templates/AGENTS-SECTION.md file. When updating this section, you **MUST** also update that file to keep them in sync.
+
 <!-- LIVESPEC:START -->
 
 # Livespec
@@ -13,25 +15,19 @@ This document uses keywords to indicate requirement severity:
 
 These represent hard-learned lessons and project-critical requirements.
 
-**FIRST ACTION:** You **MUST** read `livespec/livespec.md` before responding to ANY user message. This file **MUST** always stay fully in context — after compaction or summarization, re-read it immediately to restore full conventions.
+**FIRST ACTION:** You **MUST** ALWAYS read @livespec/livespec.md before responding to ANY message. This file **MUST** always stay fully in context — after compaction or summarization, re-read it immediately to restore full conventions.
 
 ## Projects
 
 **Keep this table updated** — when you add, rename, or remove projects, update this table immediately.
 
-| Livespec Code | Project      | Specs                         | Codebase |
-| ------------- | ------------ | ----------------------------- | -------- |
-| LIV           | Livespec CLI | `livespec/projects/livespec/` | `src/`   |
-
-## Quick Reference
-
-- **Specs:** `livespec/projects/[project]/`
-- **Active plans:** `livespec/plans/active/`
-- **Conventions:** `livespec/livespec.md`
+| Livespec Code | Project | Specs | Codebase |
+| ------------- | ------- | ----- | -------- |
+|               |         |       |          |
 
 <!-- LIVESPEC:END -->
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 
 **Important:** If you discover any information in this file that is no longer accurate or has become outdated, please update it immediately to reflect the current state of the codebase.
 
@@ -45,13 +41,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Livespec** is a living specification management tool for AI-native development. It provides a CLI and framework for maintaining specifications that evolve with code.
 
-- **Package:** `@ftzi/livespec` (npm)
-- **CLI command:** `livespec`
+IMPORTANT: **This project both develops Livespec itself and uses it to manage its own specifications.**
+
+- **NPM Package:** `@ftzi/livespec` (npm)
 
 ## Common Commands
 
 - `bun test` - Run unit tests
-- `bun ok` - Run ts, lint, and test (quick verification)
+- `bun ok` - Run ts (typechecking), lint, and test (quick)
 
 ## Architecture
 

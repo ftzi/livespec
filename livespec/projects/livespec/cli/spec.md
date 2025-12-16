@@ -107,7 +107,7 @@ Runs when `livespec/livespec.md` does not exist.
 
 - WHEN initialization completes successfully
 - THEN CLI shows "Next steps" note
-- AND includes command example for selected tools
+- AND includes "Run /livespec-setup in [tool names] to configure projects"
 - AND includes "Add specs in livespec/projects/"
 - AND includes "Read livespec/livespec.md for the full workflow"
 
@@ -129,12 +129,34 @@ Runs when `livespec/livespec.md` already exists.
 - AND `livespec/livespec.md` exists
 - THEN CLI enters update mode
 
+### Scenario: Skip update when already up to date [LIV.cli.update.already-current]
+
+- WHEN in update mode
+- AND livespec.md version matches package.json version
+- THEN CLI shows "Already up to date (vX.Y.Z)."
+- AND exits without prompting
+
+### Scenario: Show version in update prompt [LIV.cli.update.version-prompt]
+
+- WHEN in update mode
+- AND livespec.md version differs from package.json version
+- AND `-y` flag is not set
+- THEN CLI shows "Update available: vX.Y.Z → vX.Y.Z"
+- AND prompts with options: "Update base files", "Cancel"
+
+### Scenario: Handle missing version [LIV.cli.update.missing-version]
+
+- WHEN in update mode
+- AND livespec.md has no version comment
+- THEN CLI shows "Version not found in livespec.md. Latest: vX.Y.Z"
+- AND prompts for update
+
 ### Scenario: Prompt for update action [LIV.cli.update.prompt]
 
 - WHEN in update mode
 - AND `-y` flag is not set
-- THEN CLI prompts "Livespec is already initialized. What would you like to do?"
-- AND options are: "Update base files", "Cancel"
+- AND version differs or is missing
+- THEN CLI prompts with options: "Update base files", "Cancel"
 
 ### Scenario: Cancel update [LIV.cli.update.cancel]
 
@@ -164,10 +186,11 @@ Runs when `livespec/livespec.md` already exists.
 
 - WHEN update completes
 - AND files were updated
-- THEN CLI shows "Updated N files."
+- THEN CLI shows "Next step" note to run /livespec-setup
+- AND CLI shows "Updated N files to vX.Y.Z."
 
 ### Scenario: Report no changes [LIV.cli.update.no-changes]
 
 - WHEN update completes
 - AND no files needed updating
-- THEN CLI shows "All N files unchanged."
+- THEN CLI shows "All files unchanged."

@@ -119,7 +119,7 @@ describe("root AGENTS.md injection", () => {
 
 		// livespec/livespec.md has full template (no markers, different content)
 		const livespecContent = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-		expect(livespecContent).toContain("## Philosophy")
+		expect(livespecContent).toContain("## 1. Philosophy")
 		expect(livespecContent).not.toContain("# Root agents")
 	})
 

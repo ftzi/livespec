@@ -93,25 +93,19 @@ describe("livespec init", () => {
 		it("contains philosophy section", () => {
 			init({ cwd: TEST_DIR })
 			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("## Philosophy")
-		})
-
-		it("contains decision tree", () => {
-			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("Decision Tree")
+			expect(content).toContain("## 1. Philosophy")
 		})
 
 		it("contains plan file format", () => {
 			init({ cwd: TEST_DIR })
 			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("## Plan File Format")
+			expect(content).toContain("## 8. Plan File Format")
 		})
 
 		it("contains spec file format", () => {
 			init({ cwd: TEST_DIR })
 			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("## Spec File Format")
+			expect(content).toContain("## 5. Spec File")
 		})
 
 		it("contains testing declaration info", () => {
@@ -122,16 +116,11 @@ describe("livespec init", () => {
 			expect(content).toContain("e2e")
 		})
 
-		it("contains sync section", () => {
+		it("contains commands section", () => {
 			init({ cwd: TEST_DIR })
 			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("### 3. Sync")
-		})
-
-		it("contains livespec mode section", () => {
-			init({ cwd: TEST_DIR })
-			const content = readFileSync(join(TEST_DIR, "livespec/livespec.md"), "utf-8")
-			expect(content).toContain("Livespec Mode")
+			expect(content).toContain("## 10. Commands")
+			expect(content).toContain("/livespec-sync")
 		})
 	})
 

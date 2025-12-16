@@ -4,6 +4,10 @@ The `updateBaseFiles` function updates livespec files to the latest templates. U
 
 ## Design Decisions
 
+### Version-Based Updates
+
+Updates are triggered only when the version in `livespec.md` differs from the package version. This prevents unnecessary updates and provides clear version tracking.
+
 ### Content Comparison
 
 Files are only written if their content differs from the template. This avoids unnecessary file modifications and git noise.
@@ -15,6 +19,40 @@ For CLAUDE.md/AGENTS.md, only the section between markers is replaced. All other
 ### Tool Detection
 
 Instead of prompting, update mode auto-detects which AI tools have command files installed and only updates those.
+
+---
+
+## Version Checking [LIV.update.version]
+
+### Scenario: Extract version from livespec.md [LIV.update.version.extract]
+
+- WHEN extractLivespecVersion is called with a file path
+- AND file contains `<!-- livespec-version: X.Y.Z -->`
+- THEN function returns "X.Y.Z"
+
+### Scenario: Handle missing version comment [LIV.update.version.missing]
+
+- WHEN extractLivespecVersion is called with a file path
+- AND file does not contain version comment
+- THEN function returns null
+
+### Scenario: Handle missing file [LIV.update.version.no-file]
+
+- WHEN extractLivespecVersion is called with non-existent path
+- THEN function returns null
+
+### Scenario: Check if update needed [LIV.update.version.needs-update]
+
+- WHEN needsUpdate is called
+- THEN it returns object with needsUpdate, currentVersion, latestVersion
+- AND needsUpdate is true when versions differ
+- AND needsUpdate is true when currentVersion is null
+
+### Scenario: No update needed [LIV.update.version.current]
+
+- WHEN needsUpdate is called
+- AND livespec.md version equals package.json version
+- THEN needsUpdate returns false
 
 ---
 
@@ -70,6 +108,13 @@ Instead of prompting, update mode auto-detects which AI tools have command files
 ---
 
 ## Tool Command Updates [LIV.update.tools]
+
+### Scenario: Update all tool command files [LIV.update.tools.update-all]
+
+- WHEN tools includes "claude"
+- THEN updates .claude/commands/livespec.md
+- AND updates .claude/commands/livespec-sync.md
+- AND updates .claude/commands/livespec-setup.md
 
 ### Scenario: Update tool command file [LIV.update.tools.update]
 
