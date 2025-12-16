@@ -9,7 +9,7 @@
 		"typescript": "5.9.3"
 	},
 	"bin": {
-		"livespec": "./dist/bin.js"
+		"livespec": "dist/bin.js"
 	},
 	"files": [
 		"dist",
