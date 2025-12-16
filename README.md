@@ -26,7 +26,7 @@ Livespec ensures your software works as intended. Requirements become specs, spe
 - **Specs double as AI context.** No need to manually explain what specs already document.
 - **Language agnostic.** Specs are Markdown, tests use whatever you prefer.
 
-Inspired by [Openspec](https://github.com/f/openspec).
+Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 
 ---
 
