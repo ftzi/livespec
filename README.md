@@ -72,7 +72,7 @@ Works with **Claude Code**, **Cursor**, **Windsurf**, and **GitHub Copilot**. [R
 npx livespec  # or: bunx, pnpm dlx, yarn dlx
 ```
 
-This sets up livespec. Then run `/livespec-setup` with your AI to populate `project.md` files and optionally generate initial specs for your codebase.
+This sets up livespec. Then run `/livespec-setup` with your AI to populate some generated files using your project information and optionally generate initial specs for your codebase.
 
 Now just naturally ask your AI to build features — it will create feature plans for non-trivial tasks, update specs, and create and link tests.
 
