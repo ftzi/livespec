@@ -24,9 +24,14 @@ jobs:
       - name: Run checks
         run: bun run ok
 
-      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+      - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Publish to npm
         run: npm publish
