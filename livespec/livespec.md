@@ -83,6 +83,12 @@ Optional section. Where users access this feature.
 
 Optional section. Layout structure, components, and available actions.
 
+### Figma
+
+Optional subsection. Link to Figma designs.
+
+https://figma.com/file/...
+
 ## Design Decisions
 
 Optional section. Rationale for non-obvious choices.
@@ -247,8 +253,10 @@ Key concepts, terminology, gotchas.
 
 **`/livespec-setup`** — Configure project structure:
 - Analyzes codebase to detect projects
+- Presents proposed structure for user approval before making changes
 - Populates Projects table in CLAUDE.md/AGENTS.md
 - Creates or updates `project.md` files with required sections
+- Offers to generate initial specs for projects with existing code
 
 **`/livespec-sync`** — Run periodically to keep specs healthy:
 - **Checks:** Spec validity, test coverage, test type matches

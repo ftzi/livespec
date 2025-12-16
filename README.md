@@ -1,61 +1,82 @@
-# ‼️ STILL WIP! ALMOST RELEASING IT! 🏗️
-
-<br/>
 <br/>
 <br/>
 <p align="center">
-  <img src="logo.svg"  width="400" alt="Livespec logo">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/refs/heads/main/logo.svg"  width="400" alt="Livespec logo">
 </p>
 <br/>
 <p align="center">
-  <strong>Next-gen spec-driven development.</strong><br>
-  Specifications that evolve with your code. Documentation that stays true.
+  <strong>Living specs for AI-driven development.</strong><br>
+  Where specs and code stay in sync.
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@ftzi/livespec"><img src="https://img.shields.io/npm/v/@ftzi/livespec" alt="npm version"></a>
-  <a href="https://github.com/ftzi/livespec/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ftzi/livespec" alt="license"></a>
+  <a href="https://www.npmjs.com/paci likage/livespec"><img src="https://img.shields.io/npm/v/livespec" alt="npm version"></a>
+  <a href="https://github.com/ftzi/livespec/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/livespec" alt="license"></a>
+  <a href="https://github.com/ftzi/livespec/actions/workflows/ci.yml"><img src="https://github.com/ftzi/livespec/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 <br/>
 
-
-## Overview
+## 📐 Foundations
 
 Livespec ensures your software works as intended. Requirements become specs, specs become tests, tests prove the system behaves correctly.
 
-**Language agnostic.** Works with any programming language, framework, or testing tool. Specs are Markdown, tests use whatever you prefer.
+- **Specs are the source of truth.** They document what the system does. When specs and code drift apart, `/livespec-sync` catches it.
+- **Tests enforce specs.** Every scenario links to a test that validates its behavior.
+- **Decisions documented.** Design rationale and edge cases live in the spec, not in your head.
+- **Specs double as AI context.** No need to manually explain what specs already document.
+- **Language agnostic.** Specs are Markdown, tests use whatever you prefer.
 
-Your AI reads specs before coding, implements what's specified, and validates that tests prove every scenario. When someone asks "does it do X?" — the spec and its passing tests are the answer.
+Inspired by [Openspec](https://github.com/f/openspec).
 
-### Why it matters
+---
 
-**Specs define what your software should do.** Not how it's currently implemented — how it *should* behave. When every feature has a spec, you have a complete picture of your system's intended behavior.
+## 🔄 How It Works
 
-**Tests prove specs are true.** A scenario without a test is just a wish. When tests pass, the spec is real. When they fail, something needs fixing — the code or the spec.
+### Building Features
 
-**Tests enable speed.** This isn't bureaucracy. Comprehensive tests let you move fast without breaking things. Refactor fearlessly. Ship confidently. The test suite is your safety net.
+```mermaid
+flowchart TD
+    A[Request Feature] --> B{Trivial?}
+    B -->|Yes| D[Implement]
+    B -->|No| C[Create Plan]
+    C -->|User reviews| E{Approved?}
+    E -->|No| C
+    E -->|Yes| D
+    D --> F[Update Specs]
+    F --> G[Create Tests]
+    G -.->|enforce| F
+    G --> H[Done / Archive Plan]
+```
 
-**Context lives with behavior.** Why was this decision made? What problem does this solve? The rationale lives in the spec, not in someone's head or a lost Slack thread.
+### Keeping Specs & Code in Sync (`/livespec-sync`)
+
+```mermaid
+flowchart TD
+    A["/livespec-sync"] --> B[Missing tests]
+    A --> C[Orphan tests]
+    A --> D[Stale tests]
+    A --> E[Spec-code drift]
+    B --> F[Report & Fix]
+    C --> F
+    D --> F
+    E --> F
+```
 
 ---
 
 ## 🚀 Quick Start
 
+Works with **Claude Code**, **Cursor**, **Windsurf**, and **GitHub Copilot**. [Request others](https://github.com/ftzi/livespec/issues).
+
 ```bash
-npx @ftzi/livespec  # or: bunx, pnpm dlx, yarn dlx
+npx livespec  # or: bunx, pnpm dlx, yarn dlx
 ```
 
-This scaffolds the `livespec/` directory and adds commands for your AI tools (Claude Code, Cursor, Copilot, Windsurf).
+This sets up livespec. Then run `/livespec-setup` with your AI to populate `project.md` files and optionally generate initial specs for your codebase.
 
-Then just talk to your AI assistant:
+Now just naturally ask your AI to build features — it will create feature plans for non-trivial tasks, update specs, and create and link tests.
 
-```
-Add user authentication with email and password
-```
-
-It reads existing specs, creates a plan, implements code, updates specs, links tests. No special commands needed.
-
-> **Updating:** Run `npx @ftzi/livespec@latest` (or bunx, pnpm dlx, yarn dlx) and select "Update base files" to get the latest AI instructions.
+> [!TIP] > **Updating:** The same command can be used to update livespec to the latest version.
 
 ---
 
@@ -76,21 +97,20 @@ livespec/
 
 ---
 
-## 📝 Spec Format
+## 📝 Spec Format (Summary)
 
-Specs combine context with testable scenarios:
+Specs document features with testable scenarios:
 
 ```markdown
 # Authentication [APP.auth]
 
 User authentication for the application.
 
-## Entry Points
+## UI
 
-| Route     | Description       |
-| --------- | ----------------- |
-| /login    | Login page        |
-| /register | Registration page |
+### Figma
+
+https://figma.com/file/...
 
 ---
 
@@ -99,20 +119,17 @@ User authentication for the application.
 ### Scenario: Successful login [APP.auth.login.success]
 
 - WHEN user enters valid credentials
-- AND clicks submit
 - THEN user is redirected to dashboard
 ```
 
-Tests reference specs with `@spec`:
+Tests link to specs' scenarios with `@spec`:
 
 ```typescript
 /** @spec [APP.auth.login.success] */
-it('redirects to dashboard after login', () => {
-  // ...
-})
+it("redirects to dashboard after login", () => { ... });
 ```
 
-`/livespec-sync` finds scenarios without tests, tests without specs, and drift between what's documented and what's real.
+See the [full reference](./templates/livespec.md) for entry points, design decisions, test types, and more.
 
 ---
 
@@ -120,5 +137,18 @@ it('redirects to dashboard after login', () => {
 
 Optional commands for explicit operations:
 
-- `/livespec` — Check status, see active plans
-- `/livespec-sync` — Validate specs, check coverage, ensure everything is in order
+- `/livespec` — Show status, active plans, and suggestions
+- `/livespec-setup` — Run after initializing or upgrading livespec to automatically populate .md files and optionally generate initial specs for existing code
+- `/livespec-sync` — Keep specs healthy: finds scenarios without tests, tests without specs, and drift between documentation and code
+
+---
+
+## 📖 Full Reference
+
+See [`livespec/livespec.md`](./templates/livespec.md) for the full documentation.
+
+---
+
+## 🤝 Contributing
+
+Contributions and suggestions are very welcome! [Open an issue](https://github.com/ftzi/livespec/issues) or submit a PR.

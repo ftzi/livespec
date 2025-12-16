@@ -21,14 +21,11 @@ These represent hard-learned lessons and project-critical requirements.
 
 **Keep this table updated** — when you add, rename, or remove projects, update this table immediately.
 
-| Livespec Code | Project      | Specs                           | Codebase |
-| ------------- | ------------ | ------------------------------- | -------- |
-| LIV           | Livespec CLI | `livespec/projects/livespec/`   | `src/`   |
+| Livespec Code | Project      | Specs                         | Codebase |
+| ------------- | ------------ | ----------------------------- | -------- |
+| LIV           | Livespec CLI | `livespec/projects/livespec/` | `src/`   |
 
 <!-- LIVESPEC:END -->
-
-
-
 
 **Important:** If you discover any information in this file that is no longer accurate or has become outdated, please update it immediately to reflect the current state of the codebase.
 
@@ -44,7 +41,7 @@ These represent hard-learned lessons and project-critical requirements.
 
 IMPORTANT: **This project both develops Livespec itself and uses it to manage its own specifications.**
 
-- **NPM Package:** `@ftzi/livespec` (npm)
+- **NPM Package:** `livespec` (npm)
 
 ## Common Commands
 

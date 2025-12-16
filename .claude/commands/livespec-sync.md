@@ -20,13 +20,15 @@ For each spec file, verify:
 
 Report any malformed specs.
 
-### 3. Check Test Coverage
+### 3. Check Test Coverage & Enforcement
 
 For each scenario ID found in specs:
 1. Search test files for `@spec [PRJ.id]` annotations
-2. Report:
+2. For each found test, verify the test content aligns with the scenario's WHEN/THEN conditions
+3. Report:
    - Which scenarios have tests (found `@spec` annotation)
    - Which scenarios are missing tests
+   - Which tests may be stale (test content doesn't match scenario)
 
 ### 4. Auto-Promote and Archive Completed Plans
 
@@ -49,11 +51,13 @@ Output a summary:
 - ✓ 12 specs valid
 - ✗ 2 specs with issues (list them)
 
-### Test Coverage
+### Test Coverage & Enforcement
 - ✓ 45/55 scenarios have tests
 - Missing tests:
   - [PRJ.feature.scenario]
   - ...
+- Possibly stale tests:
+  - [PRJ.feature.other] — test may not match current scenario
 
 ### Completed Plans
 - Promoted specs from "add-feature" → archived to 2025-12-13-add-feature/

@@ -5,7 +5,7 @@ Living specification management tool for AI-native development. Provides a CLI a
 ## Codebase
 
 - **Location:** `src/`
-- **Package:** `@ftzi/livespec`
+- **Package:** `livespec`
 - **CLI command:** `livespec`
 
 ## Domain Knowledge
