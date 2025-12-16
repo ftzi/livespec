@@ -16,7 +16,7 @@ jobs:
 
       - uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
         with:
-          bun-version: latest
+          bun-version-file: package.json
 
       - name: Install dependencies
         run: bun ci
@@ -24,6 +24,10 @@ jobs:
       - name: Run checks
         run: bun run ok
 
-      - uses: JS-DevTools/npm-publish@d9dc932de083f0e6de6a50f0d1097a7142c3751b # v4.0.0
+      - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
-          provenance: true
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish to npm
+        run: npm publish
