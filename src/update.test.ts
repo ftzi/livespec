@@ -57,6 +57,19 @@ describe("updateBaseFiles", () => {
 		expect(result.updated.length).toBe(0)
 	})
 
+	/** @spec [LIV.update.version.force] */
+	it("can be called when versions match (force update path)", () => {
+		init({ cwd: TEST_DIR })
+
+		// Calling updateBaseFiles on an up-to-date project should work
+		// This is what --force enables: calling updateBaseFiles even when needsUpdate returns false
+		const result = updateBaseFiles({ cwd: TEST_DIR })
+
+		// Should complete without error, files skipped since content matches
+		expect(result.errors.length).toBe(0)
+		expect(result.skipped.length).toBeGreaterThan(0)
+	})
+
 	/** @spec [LIV.update.sections.claude] */
 	it("updates root CLAUDE.md livespec section when injectClaudeMd is true", () => {
 		init({ cwd: TEST_DIR })

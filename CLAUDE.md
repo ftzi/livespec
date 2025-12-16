@@ -29,6 +29,7 @@ These represent hard-learned lessons and project-critical requirements.
 
 
 
+
 **Important:** If you discover any information in this file that is no longer accurate or has become outdated, please update it immediately to reflect the current state of the codebase.
 
 **README Sync:** README.md MUST be kept in sync with the project. When changing features, workflows, or conventions, update README.md to reflect those changes.
@@ -104,3 +105,5 @@ src/
 
 - **Package Manager:** Always use `bun` instead of npm/yarn/pnpm
 - **Type:** ESM module (`"type": "module"` in package.json)
+
+To update livespec.md, update `templates/livespec.md` instead of `livespec/livespec.md`. Tell the user they can run `bun start -y -f` to ensure the latest template is applied to it.

@@ -54,6 +54,13 @@ Instead of prompting, update mode auto-detects which AI tools have command files
 - AND livespec.md version equals package.json version
 - THEN needsUpdate returns false
 
+### Scenario: Force update bypasses version check [LIV.update.version.force]
+
+- WHEN user runs livespec with --force or -f
+- AND versions already match
+- THEN update proceeds anyway
+- AND files are rewritten from templates
+
 ---
 
 ## Base File Updates [LIV.update.base-files]

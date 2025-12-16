@@ -39,27 +39,30 @@ function showHelp(): void {
 livespec - Living specification management for AI-native development
 
 Usage:
-  npx livespec [options]
+  livespec [options]
 
 Options:
-  --yes, -y     Skip prompts and use defaults
-  --help, -h    Show this help message
+  --yes, -y      Skip prompts and use defaults
+  --force, -f    Force update even if versions match
+  --help, -h     Show this help message
 `)
 }
 
-async function handleUpdate(skipPrompts: boolean): Promise<void> {
+async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void> {
 	const versionInfo = needsUpdate()
 
-	if (!versionInfo.needsUpdate) {
+	if (!(versionInfo.needsUpdate || force)) {
 		p.outro(`Already up to date (v${versionInfo.latestVersion}).`)
 		return
 	}
 
-	const versionMessage = versionInfo.currentVersion
-		? `Update available: v${versionInfo.currentVersion} → v${versionInfo.latestVersion}`
-		: `Version not found in livespec.md. Latest: v${versionInfo.latestVersion}`
+	const versionMessage = versionInfo.needsUpdate
+		? versionInfo.currentVersion
+			? `Update available: v${versionInfo.currentVersion} → v${versionInfo.latestVersion}`
+			: `Version not found in livespec.md. Latest: v${versionInfo.latestVersion}`
+		: `Force updating v${versionInfo.latestVersion}`
 
-	if (!skipPrompts) {
+	if (!skipPrompts && versionInfo.needsUpdate) {
 		const action = await p.select({
 			message: `${versionMessage}. What would you like to do?`,
 			options: [
@@ -72,6 +75,8 @@ async function handleUpdate(skipPrompts: boolean): Promise<void> {
 			p.cancel("Cancelled.")
 			return
 		}
+	} else if (!versionInfo.needsUpdate) {
+		p.log.info(versionMessage)
 	}
 
 	const { claudeMdHasSection, agentsMdHasSection } = detectLivespecSections()
@@ -203,6 +208,7 @@ async function handleFreshInit(options: FreshInitOptions): Promise<void> {
 async function main(): Promise<void> {
 	const args = process.argv.slice(2)
 	const skipPrompts = args.includes("-y") || args.includes("--yes")
+	const force = args.includes("-f") || args.includes("--force")
 
 	if (args.includes("-h") || args.includes("--help")) {
 		showHelp()
@@ -212,7 +218,7 @@ async function main(): Promise<void> {
 	p.intro("livespec")
 
 	if (isInitialized()) {
-		await handleUpdate(skipPrompts)
+		await handleUpdate(skipPrompts, force)
 	} else {
 		const { hasClaudeMd, hasAgentsMd } = detectExistingFiles()
 		await handleFreshInit({ skipPrompts, hasClaudeMd, hasAgentsMd })

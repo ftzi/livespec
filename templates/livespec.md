@@ -126,7 +126,7 @@ users/
 - Format: `[PRJ.path.to.item]` where PRJ is the 3-char project code
 - Dot-separated: `[PRJ.sidebar.tabs]` (dashes allowed but shorter names preferred)
 - Lowercase, descriptive names
-- Keep IDs stable — changing IDs breaks references
+- **NEVER** change existing IDs unless requested — changing IDs breaks test and code references
 
 ### 5.4 Testing Declaration
 
@@ -143,20 +143,20 @@ Valid test types:
 - `unit` — Unit tests (fast, isolated) — **DEFAULT, don't declare**
 - `e2e` — End-to-end tests (browser, full flow)
 - `integration` — Integration tests (API, database)
-- `none` — No automated test — **avoid; unit tests are the expected minimum**
-
-If it can't be automated, rethink the requirement.
+- `none` — No automated test — requires justification in the scenario
 
 ## 6. Test Discovery
 
-Tests reference specs via `@spec` JSDoc comments:
+Tests for specified behavior **MUST** reference specs via `@spec` JSDoc comments:
 
 ```typescript
 /** @spec [PRJ.sidebar.tabs-display] */
 it('shows all exports as tabs', () => { ... })
 ```
 
-`Sync` uses these annotations to verify test coverage. Prefer `/** */` (or equivalent for used language) over `//` for spec references.
+Internal implementation tests (helpers, utilities) don't need `@spec` references.
+
+`Sync` uses these annotations to verify test coverage. **MUST** use `/** */` (or equivalent for used language) over `//` for spec references.
 
 ## 7. Referencing Specs in Code
 
@@ -261,7 +261,7 @@ Key concepts, terminology, gotchas.
 
 ## 1. Before Any Task
 
-Run this checklist before starting work:
+You **MUST** run this checklist before starting work:
 
 - [ ] Read `project.md` for conventions and domain context
 - [ ] Read relevant specs in `livespec/projects/[project]/`
@@ -283,7 +283,7 @@ Stay spec-aware during all development:
    - Write `plan.md` with summary, why, what, tasks
    - Create draft specs in `plans/active/[plan-name]/specs/`
 
-2. **Get approval:** Do not start implementation until plan is reviewed
+2. **Get approval:** **NEVER** start implementation until plan is approved
    - Share plan with user for approval
    - Clarify any ambiguities before proceeding
 
@@ -301,6 +301,16 @@ Stay spec-aware during all development:
 - Test additions for existing specs
 - Dependency updates (non-breaking)
 - Configuration changes
+
+### 2.3 Specs Are Always Required
+
+**Skipping a plan does NOT mean skipping specs.** Even for small changes, you **MUST**:
+
+- **New behavior** → Add scenario to relevant spec
+- **Changed behavior** → Update existing scenario
+- **New tests** → Add `@spec` reference linking to scenario
+
+The only exceptions are pure refactors (no behavior change) and documentation-only changes.
 
 ## 3. Error Recovery
 
