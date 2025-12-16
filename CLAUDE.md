@@ -21,9 +21,9 @@ These represent hard-learned lessons and project-critical requirements.
 
 **Keep this table updated** — when you add, rename, or remove projects, update this table immediately.
 
-| Livespec Code | Project | Specs | Codebase |
-| ------------- | ------- | ----- | -------- |
-|               |         |       |          |
+| Livespec Code | Project      | Specs                           | Codebase |
+| ------------- | ------------ | ------------------------------- | -------- |
+| LIV           | Livespec CLI | `livespec/projects/livespec/`   | `src/`   |
 
 <!-- LIVESPEC:END -->
 
