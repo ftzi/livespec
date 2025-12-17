@@ -5,8 +5,8 @@
 </p>
 <br/>
 <p align="center">
-  <strong>Living specs for AI-driven development.</strong><br>
-  Where specs and code stay in sync.
+  <strong>Living specs for AI-native development.</strong><br>
+  Where business rules and code stay in sync.
 </p>
 
 <p align="center">
@@ -16,15 +16,18 @@
 </p>
 <br/>
 
-## 📐 Foundations
+## What is Livespec?
+
+Livespec is a specification framework for AI-native development. Supports any language, any project type.
 
 Livespec ensures your software works as intended. Requirements become specs, specs become tests, tests prove the system behaves correctly.
 
-- **Specs are the source of truth.** They document what the system does. When specs and code drift apart, `/livespec-sync` catches it.
-- **Tests enforce specs.** Every scenario links to a test that validates its behavior.
+- **Markdown-based specs.** Specs are markdown files that serve as a central hub for your business rules and requirements.
+- **Specs are the source of truth.** They document what the system does. If specs and code drift apart, `/livespec-sync` catches it.
+- **Tests enforce specs.** Every scenario has tests that validate behavior. Tests reference specs via `@spec` tags for traceability.
 - **Decisions documented.** Design rationale and edge cases live in the spec, not in your head.
 - **Specs double as AI context.** No need to manually explain what specs already document.
-- **Language agnostic.** Specs are Markdown, tests use whatever you prefer.
+- **Works with any project.** Frontend, backend, CLI tools, libraries. Any language.
 
 Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 
