@@ -1,6 +1,6 @@
 # Livespec Sync
 
-Verify specs are valid, in sync with code, and have test coverage. Automatically promote ready specs and archive completed plans.
+Verify specs are valid, in sync with code, and have test coverage. Creates a sync report with actionable suggestions.
 
 ## Workflow
 
@@ -11,58 +11,93 @@ find livespec/projects -name "spec.md"
 find livespec/plans/active -name "spec.md"
 ```
 
-### 2. Validate Spec Format
+### 2. Circuit Breaker
+
+Stop after 20 errors to avoid wasting time on fundamentally broken state. Report what was checked and suggest fixing critical issues first.
+
+### 3. Validate Spec Format
 
 For each spec file, verify:
 - Has at least one `### Scenario:` with a spec ID like `[PRJ.feature.scenario]`
-- Each scenario has `Testing:` declaration (unit, e2e, or integration)
 - Each scenario has WHEN/THEN structure
+- `Testing:` declaration only needed for non-unit tests
 
-Report any malformed specs.
+Report any malformed specs as ❌ errors.
 
-### 3. Check Test Coverage & Enforcement
+### 4. Check Test Coverage
 
 For each scenario ID found in specs:
 1. Search test files for `@spec [PRJ.id]` annotations
-2. For each found test, verify the test content aligns with the scenario's WHEN/THEN conditions
-3. Report:
-   - Which scenarios have tests (found `@spec` annotation)
-   - Which scenarios are missing tests
-   - Which tests may be stale (test content doesn't match scenario)
+2. Verify test content aligns with the scenario's WHEN/THEN conditions
+3. Categorize:
+   - ❌ **Error:** Missing tests, spec-code drift, broken specs
+   - ⚠️ **Warning:** Empty specs, orphan tests, stale tests
 
-### 4. Auto-Promote and Archive Completed Plans
+### 5. Auto-Promote and Archive Completed Plans
 
 For each plan in `livespec/plans/active/`:
 1. Read `plan.md` and check task checkboxes
 2. If ALL tasks are checked `- [x]`:
-   - Promote all specs from `plans/active/[plan]/specs/` to `livespec/projects/[project]/`
-   - If target spec exists: merge scenarios (add new ones, update existing)
-   - If target doesn't exist: move the file
-   - Move entire plan folder to `livespec/plans/archived/YYYY-MM-DD-[plan-name]/`
-   - Report promotions and archival
+   - Promote specs from `plans/active/[plan]/specs/` to `livespec/projects/[project]/`
+   - Move plan folder to `livespec/plans/archived/YYYY-MM-DD-[plan-name]/`
 
-### 5. Report Summary
+### 6. Project Insights
 
-Output a summary:
+While analyzing, note general project suggestions:
+- Deprecated dependencies
+- Architectural improvements
+- Performance opportunities
+- Security considerations
+
+### 7. Create Sync Report
+
+Create report at `livespec/sync/YYYY-MM-DD-HHMMSS.md`. Keep last 10 reports, delete older ones.
+
+**Report format:**
+
+```markdown
+# Livespec Sync
+
+**Branch:** main | **Commit:** abc123def
+**Timestamp:** 2025-12-17T10:30:00Z
+**Last sync:** 3 days ago
+
+✅ Coverage: 95% (950/1000) | 2 errors | 5 warnings
+
+## Suggestions
+- [ ] Fix drift in [APP.auth.session] - update spec or code?
+- [ ] Generate test for [APP.sidebar.overflow]
+
+## ❌ Errors (2)
+- [ ] **Drift:** [APP.auth.session](livespec/projects/app/auth/spec.md)
+  - Spec: 24h expiry | Code: 48h ([src/auth/session.ts:42](src/auth/session.ts))
+- [ ] **Missing Test:** [APP.sidebar.overflow](livespec/projects/app/sidebar/spec.md)
+
+## ⚠️ Warnings
+- [ ] [APP.old-feature](livespec/projects/app/old/spec.md) - Spec has no scenarios
+
+## 💡 Project Insights
+- Auth module uses deprecated bcrypt v2, consider upgrading
+- Multiple components fetch user data separately - consider shared hook
+- No error boundary in checkout flow
 ```
-## Sync Report
 
-### Spec Validity
-- ✓ 12 specs valid
-- ✗ 2 specs with issues (list them)
+**If circuit breaker triggered:**
 
-### Test Coverage & Enforcement
-- ✓ 45/55 scenarios have tests
-- Missing tests:
-  - [PRJ.feature.scenario]
-  - ...
-- Possibly stale tests:
-  - [PRJ.feature.other] — test may not match current scenario
+```markdown
+# Livespec Sync
 
-### Completed Plans
-- Promoted specs from "add-feature" → archived to 2025-12-13-add-feature/
+**Branch:** main | **Commit:** abc123def
+**Timestamp:** 2025-12-17T10:30:00Z
 
-### Actions Needed
-- Add tests for 10 scenarios
-- Fix 2 malformed specs
+❌ **Sync stopped early:** 20 errors reached. Fix critical issues before running full sync.
+
+Checked: 150/1000 scenarios
+
+## ❌ Errors (20)
+- [ ] ...
 ```
+
+### 8. Walk Through Suggestions
+
+After creating the report, go through each suggestion with the user one by one to decide what action to take.

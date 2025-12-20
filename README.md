@@ -18,16 +18,15 @@
 
 ## What is Livespec?
 
-Livespec is a specification framework for AI-native development. Supports any language, any project type.
+Livespec is a living specification framework for AI-native Spec-Driven Development (SDD). Specs evolve with your code and stay in sync. Language agnostic and supports any sort of project.
 
-Livespec ensures your software works as intended. Requirements become specs, specs become tests, tests prove the system behaves correctly.
+Livespec ensures your software works as intended. Requirements become specs, specs become tests, tests prove the system behaves correctly. **`/livespec-sync` ensures specs, code and tests are aligned.**
 
 - **Markdown-based specs.** Specs are markdown files that serve as a central hub for your business rules and requirements.
 - **Specs are the source of truth.** They document what the system does. If specs and code drift apart, `/livespec-sync` catches it.
 - **Tests enforce specs.** Every scenario has tests that validate behavior. Tests reference specs via `@spec` tags for traceability.
 - **Decisions documented.** Design rationale and edge cases live in the spec, not in your head.
 - **Specs double as AI context.** No need to manually explain what specs already document.
-- **Works with any project.** Frontend, backend, CLI tools, libraries. Any language.
 
 Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 

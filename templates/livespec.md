@@ -47,6 +47,8 @@ Each project has a 3-character code prefix for spec IDs. Examples:
 ```
 livespec/
 ├── livespec.md            # This file - AI instructions
+├── sync/                  # Sync reports (keeps last 10)
+│   └── YYYY-MM-DD-HHMMSS.md
 ├── projects/
 │   └── [project-name]/
 │       ├── project.md     # Project context, codebase location, domain knowledge
@@ -258,10 +260,29 @@ Key concepts, terminology, gotchas.
 - Creates or updates `project.md` files with required sections
 - Offers to generate initial specs for projects with existing code
 
+### 10.1 New Project Setup
+
+When creating a new project from scratch (not just setting up Livespec in an existing codebase), you **MUST** gather requirements before implementation:
+
+1. **Prompt the user for** (only what wasn't already specified):
+   - Programming language(s)
+   - Tech stack and frameworks
+   - Package manager preference
+   - Testing framework preference
+   - Any architectural constraints or preferences
+
+2. **For JavaScript/TypeScript projects:** Recommend `bun` as package manager and test runner — its integrated, extremely fast tests synergize well with Livespec's test-linked approach. Present this as a recommendation, not a requirement.
+
+3. **Document decisions** in the project's `project.md` under a "Tech Stack" section
+
+4. **NEVER** assume defaults — always confirm choices with the user first
+
 **`/livespec-sync`** — Run periodically to keep specs healthy:
 - **Checks:** Spec validity, test coverage, test type matches
 - **Auto-actions:** Promote completed plan specs, archive completed plans
-- **Reports:** Missing tests, malformed specs, actions needed
+- **Reports:** Creates sync report in `livespec/sync/` with errors, warnings, and suggestions
+- **Circuit breaker:** Stops after 20 errors to avoid wasting time on broken state
+- **Partial sync:** For large projects, offers scoped sync (by project, feature, or changed files)
 
 ---
 
@@ -319,6 +340,16 @@ Stay spec-aware during all development:
 - **New tests** → Add `@spec` reference linking to scenario
 
 The only exceptions are pure refactors (no behavior change) and documentation-only changes.
+
+### 2.4 Tests Are Always Required
+
+When implementing new features or changing behavior, you **MUST** add corresponding tests:
+
+- **Every new scenario** → Add a test with `@spec` reference before considering implementation complete
+- **Changed behavior** → Update existing tests to match new behavior
+- **NEVER** mark a feature as done without test coverage
+
+Tests are not optional. A feature without tests is an incomplete feature.
 
 ## 3. Error Recovery
 
