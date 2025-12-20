@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/paci likage/livespec"><img src="https://img.shields.io/npm/v/livespec" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/livespec"><img src="https://img.shields.io/npm/v/livespec" alt="npm version"></a>
   <a href="https://github.com/ftzi/livespec/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/livespec" alt="license"></a>
   <a href="https://github.com/ftzi/livespec/actions/workflows/ci.yml"><img src="https://github.com/ftzi/livespec/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
