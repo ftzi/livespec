@@ -1,7 +1,7 @@
 <br/>
 <br/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ftzi/livespec/refs/heads/main/logo.svg"  width="400" alt="Livespec logo">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/logo.svg" width="400" alt="Livespec logo">
 </p>
 <br/>
 <p align="center">
@@ -36,33 +36,15 @@ Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 
 ### Building Features
 
-```mermaid
-flowchart TD
-    A[Request Feature] --> B{Trivial?}
-    B -->|Yes| D[Implement]
-    B -->|No| C[Create Plan]
-    C -->|User reviews| E{Approved?}
-    E -->|No| C
-    E -->|Yes| D
-    D --> F[Update Specs]
-    F --> G[Create Tests]
-    G -.->|enforce| F
-    G --> H[Done / Archive Plan]
-```
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/building-features.svg" alt="Building Features workflow">
+</p>
 
 ### Keeping Specs & Code in Sync (`/livespec-sync`)
 
-```mermaid
-flowchart TD
-    A["/livespec-sync"] --> B[Missing tests]
-    A --> C[Orphan tests]
-    A --> D[Stale tests]
-    A --> E[Spec-code drift]
-    B --> F[Report & Fix]
-    C --> F
-    D --> F
-    E --> F
-```
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/livespec-sync.svg" alt="Livespec Sync workflow">
+</p>
 
 ---
 

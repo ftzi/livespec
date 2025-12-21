@@ -1,0 +1,11 @@
+flowchart TD
+    A[Request Feature] --> B{Trivial?}
+    B -->|Yes| D[Implement]
+    B -->|No| C[Create Plan]
+    C -->|User reviews| E{Approved?}
+    E -->|No| C
+    E -->|Yes| D
+    D --> F[Update Specs]
+    F --> G[Create Tests]
+    G -.->|enforce| F
+    G --> H[Done / Archive Plan]

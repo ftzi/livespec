@@ -1,0 +1,9 @@
+flowchart TD
+    A["/livespec-sync"] --> B[Missing tests]
+    A --> C[Orphan tests]
+    A --> D[Stale tests]
+    A --> E[Spec-code drift]
+    B --> F[Report & Fix]
+    C --> F
+    D --> F
+    E --> F
