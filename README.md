@@ -37,13 +37,13 @@ Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 ### Building Features
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/building-features.svg" alt="Building Features workflow">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/building-features.svg" width="200" alt="Building Features workflow" />
 </p>
 
 ### Keeping Specs & Code in Sync (`/livespec-sync`)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/livespec-sync.svg" alt="Livespec Sync workflow">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/livespec-sync.svg" width="400" alt="Livespec Sync workflow" />
 </p>
 
 ---
@@ -51,6 +51,8 @@ Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 ## 🚀 Quick Start
 
 Works with **Claude Code**, **Cursor**, **Windsurf**, and **GitHub Copilot**. [Request others](https://github.com/ftzi/livespec/issues).
+
+**Prerequisites:** [Node.js](https://nodejs.org/) or [Bun](https://bun.sh/). **For JS/TS projects, Bun is recommended for its faster integrated tests.**
 
 ```bash
 npx livespec  # or: bunx, pnpm dlx, yarn dlx
