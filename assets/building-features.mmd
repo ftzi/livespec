@@ -1,12 +1,13 @@
-%%{init: {'theme': 'neutral', 'themeVariables': { 'lineColor': '#666666', 'primaryTextColor': '#333333', 'primaryColor': '#e8e8e8', 'primaryBorderColor': '#999999' }}}%%
+%%{init: {'theme': 'neutral', 'themeVariables': { 'lineColor': '#888888', 'primaryTextColor': '#333333', 'primaryColor': '#e8e8e8', 'primaryBorderColor': '#999999', 'edgeLabelBackground': '#e8e8e8' }}}%%
 flowchart TD
     A[Request Feature] --> B{Trivial?}
     B -->|Yes| D[Implement]
-    B -->|No| C[Create Plan]
+    B -->|No| C[Write Plans]
     C -->|User reviews| E{Approved?}
     E -->|No| C
     E -->|Yes| D
     D --> F[Update Specs]
-    F --> G[Create Tests]
+    D --> G[Create Tests]
+    F --> H[Done / Archive Plan]
+    G --> H
     G -.->|enforce| F
-    G --> H[Done / Archive Plan]

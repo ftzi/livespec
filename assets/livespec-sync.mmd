@@ -1,10 +1,14 @@
-%%{init: {'theme': 'neutral', 'themeVariables': { 'lineColor': '#666666', 'primaryTextColor': '#333333', 'primaryColor': '#e8e8e8', 'primaryBorderColor': '#999999' }}}%%
+%%{init: {'theme': 'neutral', 'themeVariables': { 'lineColor': '#888888', 'primaryTextColor': '#333333', 'primaryColor': '#e8e8e8', 'primaryBorderColor': '#999999', 'edgeLabelBackground': '#e8e8e8' }}}%%
 flowchart TD
-    A["/livespec-sync"] --> B[Missing tests]
-    A --> C[Orphan tests]
-    A --> D[Stale tests]
+    A["/livespec-sync"] --> B[Specs without tests]
+    A --> C[Features without specs]
+    A --> D[Tests without specs]
     A --> E[Spec-code drift]
+    A --> G[Malformed specs]
+    A --> I[Project Insights]
     B --> F[Report & Fix]
     C --> F
     D --> F
     E --> F
+    G --> F
+    I --> F

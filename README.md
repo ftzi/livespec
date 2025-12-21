@@ -62,11 +62,12 @@ Works with **Claude Code**, **Cursor**, **Windsurf**, and **GitHub Copilot**. [R
 npx livespec  # or: bunx, pnpm dlx, yarn dlx
 ```
 
-This sets up livespec. Then run `/livespec-setup` with your AI to populate some generated files using your project information and optionally generate initial specs for your codebase.
+This sets up **livespec** files in your project. As instructed, run `/livespec-setup` with your AI to populate generated files using your project information and optionally generate initial specs for your codebase.
 
-Now just naturally ask your AI to build features — it will create feature plans for non-trivial tasks, update specs, and create and link tests.
+Now just naturally ask your AI to build features — it will create feature plans for non-trivial tasks, update specs, and create and link tests. Run `/livespec` anytime — it's your project companion for status and suggestions.
 
-> [!TIP] > **Updating:** The same command can be used to update livespec to the latest version.
+> [!TIP]
+> **Updating:** `npx livespec` can also be used to update to the latest version.
 
 ---
 
@@ -119,23 +120,11 @@ Tests link to specs' scenarios with `@spec`:
 it("redirects to dashboard after login", () => { ... });
 ```
 
-See the [full reference](./templates/livespec.md) for entry points, design decisions, test types, and more.
-
----
-
-## ⚡ Commands
-
-Optional commands for explicit operations:
-
-- `/livespec` — Show status, active plans, and suggestions
-- `/livespec-setup` — Run after initializing or upgrading livespec to automatically populate .md files and optionally generate initial specs for existing code
-- `/livespec-sync` — Keep specs healthy: finds scenarios without tests, tests without specs, and drift between documentation and code
-
 ---
 
 ## 📖 Full Reference
 
-See [`livespec/livespec.md`](./templates/livespec.md) for the full documentation.
+See [`livespec/livespec.md`](./templates/livespec.md) for entry points, design decisions, test types, and more.
 
 ---
 

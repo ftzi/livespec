@@ -89,8 +89,9 @@ async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void>
 
 	const updated = result.updated.length
 	if (updated > 0) {
-		p.note("Run /livespec-setup to update project configuration.", "Next step")
-		p.outro(`Updated ${updated} files to v${versionInfo.latestVersion}.`)
+		p.outro(
+			`Updated ${updated} files to v${versionInfo.latestVersion}.\n\nRun /livespec-setup with your AI to update project configuration.`,
+		)
 	} else {
 		p.outro("All files unchanged.")
 	}

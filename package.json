@@ -1,6 +1,6 @@
 {
 	"name": "livespec",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "Living specification management for AI-native development",
 	"repository": {
 		"url": "https://github.com/ftzi/livespec"
@@ -8,10 +8,10 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsc",
-		"diagrams": "mmdc -i assets/building-features.mmd -o assets/building-features.svg -b transparent && mmdc -i assets/livespec-sync.mmd -o assets/livespec-sync.svg -b transparent",
+		"mermaid": "mmdc -i assets/building-features.mmd -o assets/building-features.svg -b transparent && mmdc -i assets/livespec-sync.mmd -o assets/livespec-sync.svg -b transparent",
 		"lint": "bunx biome check --write --unsafe . --error-on-warnings",
 		"ok": "bun ts && bun lint && bun test",
-		"pre-commit": "bun run diagrams && bun ok && git add -u",
+		"pre-commit": "bun run mermaid && bun ok && git add -u",
 		"prepare": "husky",
 		"prepublishOnly": "bun run build",
 		"start": "bun ./src/bin.ts",

@@ -15,7 +15,7 @@ Configure Livespec for this project by analyzing the codebase structure. This is
    - Show which `project.md` files will be created or updated
    - **Wait for user approval** before making any changes
 
-3. **Update the Projects table** in CLAUDE.md and/or AGENTS.md:
+3. **Update the Projects table** in CLAUDE.md (or AGENTS.md):
    - Find the table between `<!-- LIVESPEC:START -->` and `<!-- LIVESPEC:END -->`
    - Generate a 3-char code for each project (e.g., APP, API, WEB, CLI)
    - Populate: Livespec Code, Project name, Specs path, Codebase path

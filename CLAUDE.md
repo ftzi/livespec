@@ -21,11 +21,12 @@ These represent hard-learned lessons and project-critical requirements.
 
 **Keep this table updated** — when you add, rename, or remove projects, update this table immediately.
 
-| Livespec Code | Project      | Specs                         | Codebase |
-| ------------- | ------------ | ----------------------------- | -------- |
-| LIV           | Livespec CLI | `livespec/projects/livespec/` | `src/`   |
+| Livespec Code | Project | Specs | Codebase |
+| ------------- | ------- | ----- | -------- |
+|               |         |       |          |
 
 <!-- LIVESPEC:END -->
+
 
 **Keyword Usage:** When writing or updating specification files, CLAUDE.md, project.md, or other instructional files, use **MUST** and **NEVER** keywords to enforce critical requirements. These keywords signal mandatory behavior that AI agents must follow without exception.
 

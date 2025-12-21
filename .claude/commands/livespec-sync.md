@@ -4,6 +4,31 @@ Verify specs are valid, in sync with code, and have test coverage. Creates a syn
 
 ## Workflow
 
+### 0. Assess Scope (Large Projects)
+
+For projects with many specs, a full sync may be impractical. Assess project size first:
+
+```bash
+# Count projects and specs
+find livespec/projects -name "spec.md" | wc -l
+```
+
+**Prompt the user to choose scope if:**
+- More than 3 projects configured
+- More than 20 spec files total
+- User explicitly requests a quick sync
+
+**Scope options:**
+- **Full sync** — All projects and specs (default for small/medium projects)
+- **By project** — Sync only a specific project (e.g., `APP`, `API`)
+- **By feature** — Sync only specific spec files or directories
+- **Changed only** — Sync only specs related to recently modified files:
+  ```bash
+  git diff --name-only HEAD~10 -- 'livespec/projects/**/*.md'
+  ```
+
+Document the chosen scope in the report header.
+
 ### 1. Find All Specs
 
 ```bash
@@ -33,7 +58,22 @@ For each scenario ID found in specs:
    - ❌ **Error:** Missing tests, spec-code drift, broken specs
    - ⚠️ **Warning:** Empty specs, orphan tests, stale tests
 
-### 5. Auto-Promote and Archive Completed Plans
+### 5. Detect Unspecified Entry Points
+
+Check that user-facing features have corresponding specs:
+
+1. **Check `project.md` entry points** — verify each listed entry point links to an existing spec
+2. **Scan for major components** not referenced in any spec:
+   - Routes/pages without spec coverage
+   - API endpoints not documented in specs
+   - CLI commands without specs
+3. **Report missing as warnings:**
+   - ⚠️ **Unspecified:** Entry point `/settings` listed in project.md has no spec
+   - ⚠️ **Unspecified:** Route `/api/export` has no corresponding spec
+
+Focus on user-facing entry points, not internal implementation details.
+
+### 6. Auto-Promote and Archive Completed Plans
 
 For each plan in `livespec/plans/active/`:
 1. Read `plan.md` and check task checkboxes
@@ -41,7 +81,7 @@ For each plan in `livespec/plans/active/`:
    - Promote specs from `plans/active/[plan]/specs/` to `livespec/projects/[project]/`
    - Move plan folder to `livespec/plans/archived/YYYY-MM-DD-[plan-name]/`
 
-### 6. Project Insights
+### 7. Project Insights
 
 While analyzing, note general project suggestions:
 - Deprecated dependencies
@@ -49,7 +89,7 @@ While analyzing, note general project suggestions:
 - Performance opportunities
 - Security considerations
 
-### 7. Create Sync Report
+### 8. Create Sync Report
 
 Create report at `livespec/sync/YYYY-MM-DD-HHMMSS.md`. Keep last 10 reports, delete older ones.
 
@@ -98,6 +138,6 @@ Checked: 150/1000 scenarios
 - [ ] ...
 ```
 
-### 8. Walk Through Suggestions
+### 9. Walk Through Suggestions
 
 After creating the report, go through each suggestion with the user one by one to decide what action to take.
