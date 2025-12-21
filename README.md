@@ -36,15 +36,19 @@ Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 
 ### Building Features
 
+<br/>
 <p align="center">
   <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/building-features.svg" width="200" alt="Building Features workflow" />
 </p>
+<br/>
 
 ### Keeping Specs & Code in Sync (`/livespec-sync`)
 
+<br/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/livespec-sync.svg" width="400" alt="Livespec Sync workflow" />
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/livespec-sync.svg" width="700" alt="Livespec Sync workflow" />
 </p>
+<br/>
 
 ---
 
