@@ -1,11 +1,8 @@
-<br/>
-<br/>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/logo.svg" width="400" alt="Livespec logo">
+  <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/og-image.png" width="600" alt="Livespec - Specs in sync with code and tests">
 </p>
 <p align="center">
-  <strong>Specs in sync with code and tests.</strong><br>
-  Next-gen AI-native development.
+  <strong>Next-gen AI-native development.</strong>
 </p>
 
 <p align="center">
@@ -17,7 +14,7 @@
 
 ## What is Livespec?
 
-**Specs that prove themselves.**
+**An AI-native tool that builds projects with living specs and spec-driven tests, while keeping everything in sync and working.**
 
 Project documentation in tools like Notion lives disconnected from the actual code, and gets stale the moment it's written. Without documented behaviors, there's no way to verify tests cover everything they should. Even if all behaviors were documented, manually ensuring test coverage for each would be impractical. Other AI spec tools rely on complex and rigid workflows with multiple commands, and soon enough no longer represent actual code as you won't always use their processes.
 
