@@ -145,6 +145,11 @@ Instead of prompting, update mode auto-detects which AI tools have command files
 - WHEN `.claude/commands/livespec.md` exists
 - THEN detectInstalledTools returns array containing "claude"
 
+### Scenario: Detect installed Gemini command [LIV.update.detect-tools.gemini]
+
+- WHEN `.gemini/commands/livespec.toml` exists
+- THEN detectInstalledTools returns array containing "gemini"
+
 ### Scenario: Detect multiple tools [LIV.update.detect-tools.multiple]
 
 - WHEN `.claude/commands/livespec.md` exists

@@ -1,4 +1,4 @@
-export type AITool = "claude" | "copilot" | "cursor" | "windsurf"
+export type AITool = "claude" | "copilot" | "cursor" | "windsurf" | "gemini"
 
 export type AIToolConfig = {
 	id: AITool
@@ -35,6 +35,13 @@ export const AI_TOOLS: Record<AITool, AIToolConfig> = {
 		name: "Windsurf",
 		commandDir: ".windsurf/workflows",
 		commandFile: "livespec.md",
+		commandExample: "/livespec",
+	},
+	gemini: {
+		id: "gemini",
+		name: "Gemini CLI",
+		commandDir: ".gemini/commands",
+		commandFile: "livespec.toml",
 		commandExample: "/livespec",
 	},
 }

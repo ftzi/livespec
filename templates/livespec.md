@@ -360,6 +360,16 @@ When implementing new features or changing behavior, you **MUST** add correspond
 
 Tests are not optional. A feature without tests is an incomplete feature.
 
+### 2.5 Before Completing Any Task
+
+You **MUST** verify:
+
+- [ ] Specs added/updated for any new or changed behavior
+- [ ] Tests added with `@spec` references
+- [ ] Type checking, linting, and tests pass (if configured)
+
+**NEVER** consider a task complete without all three.
+
 ## 3. Error Recovery
 
 ### 3.1 Spec-Code Mismatch

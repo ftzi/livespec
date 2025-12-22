@@ -23,7 +23,7 @@ These represent hard-learned lessons and project-critical requirements.
 
 | Livespec Code | Project | Specs | Codebase |
 | ------------- | ------- | ----- | -------- |
-|               |         |       |          |
+| LIV           | Livespec CLI | `livespec/projects/livespec/` | `src/` |
 
 <!-- LIVESPEC:END -->
 

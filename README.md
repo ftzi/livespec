@@ -57,7 +57,7 @@ Inspired by [OpenSpec](https://github.com/Fission-AI/OpenSpec).
 
 ## 🚀 Quick Start
 
-Works with **Claude Code**, **Cursor**, **Windsurf**, and **GitHub Copilot**. [Request others](https://github.com/ftzi/livespec/issues).
+Works with **Claude Code**, **Cursor**, **Windsurf**, **GitHub Copilot**, and **Gemini CLI**. [Request others](https://github.com/ftzi/livespec/issues).
 
 **Prerequisites:** [Node.js](https://nodejs.org/) or [Bun](https://bun.sh/). **For JS/TS projects, Bun is recommended for its faster integrated tests.**
 

@@ -50,7 +50,7 @@ export function showHelp(): void {
 	console.log(HELP_TEXT)
 }
 
-async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void> {
+export async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void> {
 	const versionInfo = needsUpdate()
 
 	if (!(versionInfo.needsUpdate || force)) {
@@ -102,7 +102,7 @@ async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void>
 	}
 }
 
-async function promptForInjectionTargets(
+export async function promptForInjectionTargets(
 	hasClaudeMd: boolean,
 	hasAgentsMd: boolean,
 ): Promise<{ injectClaudeMd: boolean; injectAgentsMd: boolean } | null> {
@@ -128,7 +128,7 @@ async function promptForInjectionTargets(
 	}
 }
 
-async function promptForTools(): Promise<AITool[] | null> {
+export async function promptForTools(): Promise<AITool[] | null> {
 	const toolOptions = ALL_TOOLS.map((id) => ({
 		value: id,
 		label: AI_TOOLS[id].name,
@@ -149,7 +149,7 @@ async function promptForTools(): Promise<AITool[] | null> {
 	return tools
 }
 
-function showNextSteps(selectedTools: AITool[]): void {
+export function showNextSteps(selectedTools: AITool[]): void {
 	const toolNames = selectedTools.map((t) => AI_TOOLS[t].name).join(", ")
 
 	const nextSteps =
@@ -163,13 +163,13 @@ function showNextSteps(selectedTools: AITool[]): void {
 	p.note(nextSteps, "Next steps")
 }
 
-type FreshInitOptions = {
+export type FreshInitOptions = {
 	skipPrompts: boolean
 	hasClaudeMd: boolean
 	hasAgentsMd: boolean
 }
 
-async function handleFreshInit(options: FreshInitOptions): Promise<void> {
+export async function handleFreshInit(options: FreshInitOptions): Promise<void> {
 	const { skipPrompts, hasClaudeMd, hasAgentsMd } = options
 	let injectClaudeMd = hasClaudeMd
 	let injectAgentsMd = hasAgentsMd

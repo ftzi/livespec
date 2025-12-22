@@ -230,6 +230,11 @@ function injectLivespecSection({ filePath, skipExisting, result }: InjectSection
 	}
 }
 
+function getCommandTemplateName(commandFile: string): string {
+	const ext = commandFile.split(".").pop()
+	return ext === "toml" ? "commands/livespec.toml" : "commands/livespec.md"
+}
+
 function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandOptions): void {
 	const config = AI_TOOLS[tool]
 	const commandDir = join(cwd, config.commandDir)
@@ -246,8 +251,9 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 		}
 	}
 
-	// Write command file
-	const commandContent = readTemplate("commands/livespec.md")
+	// Write command file (pick template based on file extension)
+	const templateName = getCommandTemplateName(config.commandFile)
+	const commandContent = readTemplate(templateName)
 	writeFileIfNotExists({ filePath: commandPath, content: commandContent, skipExisting, result })
 }
 
@@ -323,9 +329,10 @@ export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResul
 function updateToolCommand({ cwd, tool, result }: { cwd: string; tool: AITool; result: InitResult }): void {
 	const config = AI_TOOLS[tool]
 
-	// Update command file
+	// Update command file (pick template based on file extension)
 	const commandPath = join(cwd, config.commandDir, config.commandFile)
-	const commandContent = readTemplate("commands/livespec.md")
+	const templateName = getCommandTemplateName(config.commandFile)
+	const commandContent = readTemplate(templateName)
 	updateFileIfChanged({ filePath: commandPath, newContent: commandContent, result })
 }
 

@@ -27,7 +27,7 @@ async function loadGoogleFont(font: string, weight: number): Promise<ArrayBuffer
 async function main() {
 	const logoSvg = Buffer.from(readFileSync(LOGO_PATH)).toString("base64")
 
-	const interRegular = await loadGoogleFont("Inter", 400)
+	const [interRegular, interSemiBold] = await Promise.all([loadGoogleFont("Inter", 400), loadGoogleFont("Inter", 600)])
 
 	const svg = await satori(OGImage({ logoSvg }), {
 		width: ogImageConfig.width,
@@ -37,6 +37,12 @@ async function main() {
 				name: "Inter",
 				data: interRegular,
 				weight: 400,
+				style: "normal",
+			},
+			{
+				name: "Inter",
+				data: interSemiBold,
+				weight: 600,
 				style: "normal",
 			},
 		],

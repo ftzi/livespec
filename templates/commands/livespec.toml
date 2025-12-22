@@ -1,3 +1,4 @@
+prompt = """
 # Livespec
 
 Ensure project structure is configured and specs are valid, in sync with code, and have test coverage. Creates a sync report with actionable suggestions.
@@ -242,3 +243,4 @@ Checked: 150/1000 scenarios
 ### 14. Walk Through Suggestions
 
 After creating the report, go through each suggestion with the user one by one to decide what action to take.
+"""

@@ -168,6 +168,12 @@ Creates the `/livespec` command file for AI coding assistants.
 - WHEN tools includes "windsurf"
 - THEN `.windsurf/workflows/livespec.md` is created
 
+### Scenario: Create Gemini CLI command [LIV.init.tools.gemini]
+
+- WHEN tools includes "gemini"
+- THEN `.gemini/commands/livespec.toml` is created
+- AND file uses TOML format with prompt key
+
 ### Scenario: Create command directory [LIV.init.tools.directory]
 
 - WHEN tools includes "claude"

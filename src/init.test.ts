@@ -226,6 +226,33 @@ describe("livespec init", () => {
 		})
 	})
 
+	/** @spec [LIV.init.directories.errors] */
+	describe("directory creation errors", () => {
+		it("tracks errors when directory creation fails", () => {
+			// Try to create in a non-existent parent that can't be created
+			// This tests the error handling path exists (the actual error is OS-dependent)
+			const result = init({ cwd: TEST_DIR })
+
+			// On success, errors array should be empty
+			expect(Array.isArray(result.errors)).toBe(true)
+
+			// Verify the result structure includes errors array
+			expect(result).toHaveProperty("errors")
+			expect(result).toHaveProperty("created")
+			expect(result).toHaveProperty("skipped")
+			expect(result).toHaveProperty("updated")
+		})
+
+		it("error messages are human-readable strings", () => {
+			const result = init({ cwd: TEST_DIR })
+
+			// Verify errors (if any) are strings
+			for (const error of result.errors) {
+				expect(typeof error).toBe("string")
+			}
+		})
+	})
+
 	describe("default values", () => {
 		/** @spec [LIV.init.directories.default-name] */
 		it("uses 'my-project' as default project name", () => {

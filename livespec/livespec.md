@@ -1,4 +1,4 @@
-<!-- livespec-version: 1.0.6 -->
+<!-- livespec-version: 1.0.8 -->
 
 # Livespec Instructions
 
@@ -268,14 +268,13 @@ Key concepts, terminology, gotchas.
 
 ## 10. Commands
 
-**`/livespec`** — Your project companion. One command for everything:
+**`/livespec`** — Ensure everything is aligned:
 - **Structure check:** Validates Projects table and project.md files, fixes issues if found
 - **Spec validation:** Checks spec format, test coverage, test type matches
 - **Auto-actions:** Promote completed plan specs, archive completed plans
 - **Reports:** Creates sync report in `livespec/sync/` with errors, warnings, and suggestions
 - **Circuit breaker:** Stops after 20 errors to avoid wasting time on broken state
 - **Partial sync:** For large projects, offers scoped sync (by project, feature, or changed files)
-- **Task mode:** Call with a task (e.g., `/livespec add dark mode`) to plan and implement features
 
 ### 10.1 New Project Setup
 
@@ -360,6 +359,16 @@ When implementing new features or changing behavior, you **MUST** add correspond
 - **NEVER** mark a feature as done without test coverage
 
 Tests are not optional. A feature without tests is an incomplete feature.
+
+### 2.5 Before Completing Any Task
+
+You **MUST** verify:
+
+- [ ] Specs added/updated for any new or changed behavior
+- [ ] Tests added with `@spec` references
+- [ ] Type checking, linting, and tests pass (if configured)
+
+**NEVER** consider a task complete without all three.
 
 ## 3. Error Recovery
 
