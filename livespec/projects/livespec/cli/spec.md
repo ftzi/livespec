@@ -107,7 +107,7 @@ Runs when `livespec/livespec.md` does not exist.
 
 - WHEN initialization completes successfully
 - THEN CLI shows "Next steps" note
-- AND includes "Run /livespec-setup in [tool names] to configure projects"
+- AND includes "Run /livespec in [tool names] to configure projects"
 - AND includes "Add specs in livespec/projects/"
 - AND includes "Read livespec/livespec.md for the full workflow"
 
@@ -186,7 +186,7 @@ Runs when `livespec/livespec.md` already exists.
 
 - WHEN update completes
 - AND files were updated
-- THEN CLI shows "Next step" note to run /livespec-setup
+- THEN CLI shows "Next step" note to run /livespec
 - AND CLI shows "Updated N files to vX.Y.Z."
 
 ### Scenario: Report no changes [LIV.cli.update.no-changes]

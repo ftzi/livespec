@@ -18,17 +18,21 @@
 
 ## What is Livespec?
 
-Livespec is a living specification framework for AI-native Spec-Driven Development (SDD). Specs evolve with your code and stay in sync. Language agnostic and supports any sort of project.
+**Specs that prove themselves.**
 
-Livespec ensures your software works as intended. Requirements become specs, specs become tests, tests prove the system behaves correctly. **`/livespec-sync` ensures specs, code and tests are aligned.**
+Traditional docs live in external tools, get stale the moment they're written, and the effort to maintain them is wasted. Tests might exist but verifying they cover all expected behaviors is manual and impractical.
 
-- **Markdown-based specs.** Specs are markdown files that serve as a central hub for your business rules and requirements.
-- **Specs are the source of truth.** They document what the system does. If specs and code drift apart, `/livespec-sync` catches it.
-- **Tests enforce specs.** Every scenario has tests that validate behavior. Tests reference specs via `@spec` tags for traceability.
-- **Decisions documented.** Design rationale and edge cases live in the spec, not in your head.
-- **Specs double as AI context.** No need to manually explain what specs already document.
+Livespec brings Spec-Driven Development (SDD) with Behavior-Driven Development (BDD) scenarios to AI coding. Every behavior is a spec. Every spec has tests linked with `@spec` tags. **One command — `/livespec` — finds and fixes specs without tests, features without specs, and drift between code and specs**, guiding you through decisions when needed.
 
-Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
+Your AI writes plans for complex tasks, specs, code, and tests. You approve. The system proves they work.
+
+**Designed for both humans and AI.** Just naturally talk to your AI. No complex workflows, commands, or config to learn. Coded something yourself? `/livespec` catches up, or your AI updates specs when it notices drift.
+
+**Specs are also AI context.** No need to re-explain what's already documented. Specs get automatically updated if info is outdated or missing.
+
+**Language agnostic.** Works with any codebase, any language.
+
+Inspired by [OpenSpec](https://github.com/Fission-AI/OpenSpec).
 
 ---
 
@@ -42,7 +46,7 @@ Inspired by [Openspec](https://github.com/Fission-AI/OpenSpec).
 </p>
 <br/>
 
-### Keeping Specs & Code in Sync (`/livespec-sync`)
+### Keeping Specs & Code in Sync (`/livespec`)
 
 <br/>
 <p align="center">
@@ -59,15 +63,15 @@ Works with **Claude Code**, **Cursor**, **Windsurf**, and **GitHub Copilot**. [R
 **Prerequisites:** [Node.js](https://nodejs.org/) or [Bun](https://bun.sh/). **For JS/TS projects, Bun is recommended for its faster integrated tests.**
 
 ```bash
-npx livespec  # or: bunx, pnpm dlx, yarn dlx
+npx livespec  # or: bunx livespec, pnpm dlx livespec, yarn dlx livespec
 ```
 
-This sets up **livespec** files in your project. As instructed, run `/livespec-setup` with your AI to populate generated files using your project information and optionally generate initial specs for your codebase.
+This sets up **livespec** files in your project. As instructed, run `/livespec` with your AI to populate generated files using your project information and optionally generate initial specs for your codebase.
 
-Now just naturally ask your AI to build features — it will create feature plans for non-trivial tasks, update specs, and create and link tests. Run `/livespec` anytime — it's your project companion for status and suggestions.
+Now just naturally ask your AI to build features. It will create feature plans for non-trivial tasks, update specs, and create and link tests. Run `/livespec` anytime to sync and verify everything is aligned.
 
 > [!TIP]
-> **Updating:** `npx livespec` can also be used to update to the latest version.
+> **Updating:** `npx livespec` can also be used to update livespec in your project to the latest version.
 
 ---
 
@@ -131,3 +135,9 @@ See [`livespec/livespec.md`](./templates/livespec.md) for entry points, design d
 ## 🤝 Contributing
 
 Contributions and suggestions are very welcome! [Open an issue](https://github.com/ftzi/livespec/issues) or submit a PR.
+
+---
+
+## 🌟 Showcase
+
+Have a project, video, or blog post using Livespec? [Open an issue](https://github.com/ftzi/livespec/issues) to get it featured here!

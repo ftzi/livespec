@@ -234,8 +234,6 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 	const config = AI_TOOLS[tool]
 	const commandDir = join(cwd, config.commandDir)
 	const commandPath = join(commandDir, config.commandFile)
-	const syncCommandPath = join(commandDir, config.syncCommandFile)
-	const setupCommandPath = join(commandDir, config.setupCommandFile)
 
 	// Create command directory if it doesn't exist
 	if (!existsSync(commandDir)) {
@@ -248,17 +246,9 @@ function setupToolCommand({ cwd, tool, skipExisting, result }: SetupToolCommandO
 		}
 	}
 
-	// Write main command file
+	// Write command file
 	const commandContent = readTemplate("commands/livespec.md")
 	writeFileIfNotExists({ filePath: commandPath, content: commandContent, skipExisting, result })
-
-	// Write sync command file
-	const syncContent = readTemplate("commands/livespec-sync.md")
-	writeFileIfNotExists({ filePath: syncCommandPath, content: syncContent, skipExisting, result })
-
-	// Write setup command file
-	const setupContent = readTemplate("commands/livespec-setup.md")
-	writeFileIfNotExists({ filePath: setupCommandPath, content: setupContent, skipExisting, result })
 }
 
 /**
@@ -333,20 +323,10 @@ export function updateBaseFiles(options: UpdateBaseFilesOptions = {}): InitResul
 function updateToolCommand({ cwd, tool, result }: { cwd: string; tool: AITool; result: InitResult }): void {
 	const config = AI_TOOLS[tool]
 
-	// Update main command
+	// Update command file
 	const commandPath = join(cwd, config.commandDir, config.commandFile)
 	const commandContent = readTemplate("commands/livespec.md")
 	updateFileIfChanged({ filePath: commandPath, newContent: commandContent, result })
-
-	// Update sync command
-	const syncPath = join(cwd, config.commandDir, config.syncCommandFile)
-	const syncContent = readTemplate("commands/livespec-sync.md")
-	updateFileIfChanged({ filePath: syncPath, newContent: syncContent, result })
-
-	// Update setup command
-	const setupPath = join(cwd, config.commandDir, config.setupCommandFile)
-	const setupContent = readTemplate("commands/livespec-setup.md")
-	updateFileIfChanged({ filePath: setupPath, newContent: setupContent, result })
 }
 
 type UpdateFileOptions = {

@@ -146,14 +146,7 @@ Injects livespec section into CLAUDE.md or AGENTS.md.
 
 ## AI Tool Commands [LIV.init.tools]
 
-Creates `/livespec`, `/livespec-sync`, and `/livespec-setup` command files for AI coding assistants.
-
-### Scenario: Create all Claude Code commands [LIV.init.tools.claude-all]
-
-- WHEN tools includes "claude"
-- THEN `.claude/commands/livespec.md` is created
-- AND `.claude/commands/livespec-sync.md` is created
-- AND `.claude/commands/livespec-setup.md` is created
+Creates the `/livespec` command file for AI coding assistants.
 
 ### Scenario: Create Claude Code command [LIV.init.tools.claude]
 
@@ -164,22 +157,16 @@ Creates `/livespec`, `/livespec-sync`, and `/livespec-setup` command files for A
 
 - WHEN tools includes "copilot"
 - THEN `.github/prompts/livespec.prompt.md` is created
-- AND `.github/prompts/livespec-sync.prompt.md` is created
-- AND `.github/prompts/livespec-setup.prompt.md` is created
 
 ### Scenario: Create Cursor command [LIV.init.tools.cursor]
 
 - WHEN tools includes "cursor"
 - THEN `.cursor/prompts/livespec.md` is created
-- AND `.cursor/prompts/livespec-sync.md` is created
-- AND `.cursor/prompts/livespec-setup.md` is created
 
 ### Scenario: Create Windsurf command [LIV.init.tools.windsurf]
 
 - WHEN tools includes "windsurf"
 - THEN `.windsurf/workflows/livespec.md` is created
-- AND `.windsurf/workflows/livespec-sync.md` is created
-- AND `.windsurf/workflows/livespec-setup.md` is created
 
 ### Scenario: Create command directory [LIV.init.tools.directory]
 

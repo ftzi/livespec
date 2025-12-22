@@ -7,45 +7,47 @@ import { LIVESPEC_START_MARKER } from "./consts"
 import { type AITool, detectInstalledTools, init, isInitialized, needsUpdate, updateBaseFiles } from "./init"
 import { AI_TOOLS, ALL_TOOLS } from "./tools/config"
 
-function getDefaultProjectName(): string {
-	const cwd = process.cwd()
+export function getDefaultProjectName(cwd: string = process.cwd()): string {
 	return cwd.split("/").pop() || "my-project"
 }
 
-function fileHasLivespecSection(filePath: string): boolean {
+export function fileHasLivespecSection(filePath: string): boolean {
 	if (!existsSync(filePath)) return false
 	const content = readFileSync(filePath, "utf-8")
 	return content.includes(LIVESPEC_START_MARKER)
 }
 
-function detectExistingFiles(): { hasClaudeMd: boolean; hasAgentsMd: boolean } {
-	const cwd = process.cwd()
+export function detectExistingFiles(cwd: string = process.cwd()): { hasClaudeMd: boolean; hasAgentsMd: boolean } {
 	return {
 		hasClaudeMd: existsSync(join(cwd, "CLAUDE.md")),
 		hasAgentsMd: existsSync(join(cwd, "AGENTS.md")),
 	}
 }
 
-function detectLivespecSections(): { claudeMdHasSection: boolean; agentsMdHasSection: boolean } {
-	const cwd = process.cwd()
+export function detectLivespecSections(cwd: string = process.cwd()): {
+	claudeMdHasSection: boolean
+	agentsMdHasSection: boolean
+} {
 	return {
 		claudeMdHasSection: fileHasLivespecSection(join(cwd, "CLAUDE.md")),
 		agentsMdHasSection: fileHasLivespecSection(join(cwd, "AGENTS.md")),
 	}
 }
 
-function showHelp(): void {
-	console.log(`
+export const HELP_TEXT = `
 livespec - Living specification management for AI-native development
 
 Usage:
-  livespec [options]
+  npx livespec [options]
 
 Options:
-  --yes, -y      Skip prompts and use defaults
-  --force, -f    Force update even if versions match
-  --help, -h     Show this help message
-`)
+  -y, --yes      Skip prompts and use defaults
+  -f, --force    Force update even if versions match
+  -h, --help     Show this help message
+`
+
+export function showHelp(): void {
+	console.log(HELP_TEXT)
 }
 
 async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void> {
@@ -56,11 +58,14 @@ async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void>
 		return
 	}
 
-	const versionMessage = versionInfo.needsUpdate
-		? versionInfo.currentVersion
-			? `Update available: v${versionInfo.currentVersion} → v${versionInfo.latestVersion}`
-			: `Version not found in livespec.md. Latest: v${versionInfo.latestVersion}`
-		: `Force updating v${versionInfo.latestVersion}`
+	let versionMessage: string
+	if (!versionInfo.needsUpdate) {
+		versionMessage = `Force updating v${versionInfo.latestVersion}`
+	} else if (versionInfo.currentVersion) {
+		versionMessage = `Update available: v${versionInfo.currentVersion} → v${versionInfo.latestVersion}`
+	} else {
+		versionMessage = `Version not found in livespec.md. Latest: v${versionInfo.latestVersion}`
+	}
 
 	if (!skipPrompts && versionInfo.needsUpdate) {
 		const action = await p.select({
@@ -90,7 +95,7 @@ async function handleUpdate(skipPrompts: boolean, force: boolean): Promise<void>
 	const updated = result.updated.length
 	if (updated > 0) {
 		p.outro(
-			`Updated ${updated} files to v${versionInfo.latestVersion}.\n\nRun /livespec-setup with your AI to update project configuration.`,
+			`Updated ${updated} files to v${versionInfo.latestVersion}.\n\nRun /livespec with your AI to update project configuration.`,
 		)
 	} else {
 		p.outro("All files unchanged.")
@@ -149,7 +154,7 @@ function showNextSteps(selectedTools: AITool[]): void {
 
 	const nextSteps =
 		selectedTools.length > 0
-			? `1. Run /livespec-setup in ${toolNames} to configure projects
+			? `1. Run /livespec in ${toolNames} to configure projects
 2. Add specs in livespec/projects/
 3. Read livespec/livespec.md for the full workflow`
 			: `1. Add specs in livespec/projects/

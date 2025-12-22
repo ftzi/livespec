@@ -5,8 +5,6 @@ export type AIToolConfig = {
 	name: string
 	commandDir: string
 	commandFile: string
-	syncCommandFile: string
-	setupCommandFile: string
 	commandExample: string
 }
 
@@ -16,8 +14,6 @@ export const AI_TOOLS: Record<AITool, AIToolConfig> = {
 		name: "Claude Code",
 		commandDir: ".claude/commands",
 		commandFile: "livespec.md",
-		syncCommandFile: "livespec-sync.md",
-		setupCommandFile: "livespec-setup.md",
 		commandExample: "/livespec",
 	},
 	copilot: {
@@ -25,8 +21,6 @@ export const AI_TOOLS: Record<AITool, AIToolConfig> = {
 		name: "GitHub Copilot",
 		commandDir: ".github/prompts",
 		commandFile: "livespec.prompt.md",
-		syncCommandFile: "livespec-sync.prompt.md",
-		setupCommandFile: "livespec-setup.prompt.md",
 		commandExample: "/livespec",
 	},
 	cursor: {
@@ -34,8 +28,6 @@ export const AI_TOOLS: Record<AITool, AIToolConfig> = {
 		name: "Cursor",
 		commandDir: ".cursor/prompts",
 		commandFile: "livespec.md",
-		syncCommandFile: "livespec-sync.md",
-		setupCommandFile: "livespec-setup.md",
 		commandExample: "/livespec",
 	},
 	windsurf: {
@@ -43,8 +35,6 @@ export const AI_TOOLS: Record<AITool, AIToolConfig> = {
 		name: "Windsurf",
 		commandDir: ".windsurf/workflows",
 		commandFile: "livespec.md",
-		syncCommandFile: "livespec-sync.md",
-		setupCommandFile: "livespec-setup.md",
 		commandExample: "/livespec",
 	},
 }

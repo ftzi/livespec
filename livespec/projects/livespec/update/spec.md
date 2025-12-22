@@ -116,13 +116,6 @@ Instead of prompting, update mode auto-detects which AI tools have command files
 
 ## Tool Command Updates [LIV.update.tools]
 
-### Scenario: Update all tool command files [LIV.update.tools.update-all]
-
-- WHEN tools includes "claude"
-- THEN updates .claude/commands/livespec.md
-- AND updates .claude/commands/livespec-sync.md
-- AND updates .claude/commands/livespec-setup.md
-
 ### Scenario: Update tool command file [LIV.update.tools.update]
 
 - WHEN tools includes "claude"

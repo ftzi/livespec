@@ -148,14 +148,31 @@ Testing: e2e
 
 Valid test types:
 
-- `unit` — Unit tests (fast, isolated) — **DEFAULT, don't declare**
+- `unit` — Unit tests (fast, isolated) — **DEFAULT, don't declare**. **MUST be preferred** — extremely fast. Interactive code (prompts, CLI) can be unit tested by mocking the prompt library.
 - `e2e` — End-to-end tests (browser, full flow)
 - `integration` — Integration tests (API, database)
-- `none` — No automated test — requires justification in the scenario
+- `none` — No automated test — **MUST** be avoided; find a way to test the behavior
+
+### 5.5 Batching E2E Tests
+
+Related e2e scenarios can share a single test session when they follow a natural user flow. This is faster than spinning up separate browser sessions for each scenario.
+
+```typescript
+/**
+ * @spec [PRJ.checkout.add-item]
+ * @spec [PRJ.checkout.update-quantity]
+ * @spec [PRJ.checkout.remove-item]
+ */
+test('checkout cart operations', async ({ page }) => {
+  // ... tests for all three scenarios in sequence
+})
+```
+
+**When to batch:** Scenarios that form a logical flow where each step builds on the previous state.
 
 ## 6. Test Discovery
 
-Tests for specified behavior **MUST** reference specs via `@spec` JSDoc comments:
+Tests for specified behavior **MUST** reference specs via `@spec` in JSDoc-like comments:
 
 ```typescript
 /** @spec [PRJ.sidebar.tabs-display] */
@@ -168,7 +185,7 @@ Internal implementation tests (helpers, utilities) don't need `@spec` references
 
 ## 7. Referencing Specs in Code
 
-Use JSDoc comments for implementation code:
+Use JSDoc-like comments for implementation code:
 
 ```typescript
 /**
@@ -251,14 +268,14 @@ Key concepts, terminology, gotchas.
 
 ## 10. Commands
 
-**`/livespec`** — Project companion: shows status, offers suggestions, helps plan and implement features
-
-**`/livespec-setup`** — Configure project structure:
-- Analyzes codebase to detect projects
-- Presents proposed structure for user approval before making changes
-- Populates Projects table in CLAUDE.md/AGENTS.md
-- Creates or updates `project.md` files with required sections
-- Offers to generate initial specs for projects with existing code
+**`/livespec`** — Your project companion. One command for everything:
+- **Structure check:** Validates Projects table and project.md files, fixes issues if found
+- **Spec validation:** Checks spec format, test coverage, test type matches
+- **Auto-actions:** Promote completed plan specs, archive completed plans
+- **Reports:** Creates sync report in `livespec/sync/` with errors, warnings, and suggestions
+- **Circuit breaker:** Stops after 20 errors to avoid wasting time on broken state
+- **Partial sync:** For large projects, offers scoped sync (by project, feature, or changed files)
+- **Task mode:** Call with a task (e.g., `/livespec add dark mode`) to plan and implement features
 
 ### 10.1 New Project Setup
 
@@ -276,13 +293,6 @@ When creating a new project from scratch (not just setting up Livespec in an exi
 3. **Document decisions** in the project's `project.md` under a "Tech Stack" section
 
 4. **NEVER** assume defaults — always confirm choices with the user first
-
-**`/livespec-sync`** — Run periodically to keep specs healthy:
-- **Checks:** Spec validity, test coverage, test type matches
-- **Auto-actions:** Promote completed plan specs, archive completed plans
-- **Reports:** Creates sync report in `livespec/sync/` with errors, warnings, and suggestions
-- **Circuit breaker:** Stops after 20 errors to avoid wasting time on broken state
-- **Partial sync:** For large projects, offers scoped sync (by project, feature, or changed files)
 
 ---
 

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test"
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
-import { init, updateBaseFiles } from "./init"
+import { extractLivespecVersion, init, needsUpdate, updateBaseFiles } from "./init"
 import { cleanupTestDir, setupTestDir, TEST_DIR } from "./test-utils"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -203,5 +203,76 @@ This should be preserved.
 		// Custom files should be untouched
 		expect(readFileSync(specPath, "utf-8")).toBe("# My custom spec")
 		expect(readFileSync(planPath, "utf-8")).toBe("# My custom plan")
+	})
+})
+
+/** @spec [LIV.update.version] */
+describe("version checking", () => {
+	beforeEach(setupTestDir)
+	afterEach(cleanupTestDir)
+
+	/** @spec [LIV.update.version.extract] */
+	it("extractLivespecVersion returns version from file", () => {
+		const filePath = join(TEST_DIR, "livespec.md")
+		writeFileSync(filePath, "<!-- livespec-version: 1.2.3 -->\n# Livespec")
+
+		const version = extractLivespecVersion(filePath)
+		expect(version).toBe("1.2.3")
+	})
+
+	/** @spec [LIV.update.version.missing] */
+	it("extractLivespecVersion returns null when no version comment", () => {
+		const filePath = join(TEST_DIR, "livespec.md")
+		writeFileSync(filePath, "# Livespec\nNo version here")
+
+		const version = extractLivespecVersion(filePath)
+		expect(version).toBeNull()
+	})
+
+	/** @spec [LIV.update.version.no-file] */
+	it("extractLivespecVersion returns null for non-existent file", () => {
+		const version = extractLivespecVersion(join(TEST_DIR, "nonexistent.md"))
+		expect(version).toBeNull()
+	})
+
+	/** @spec [LIV.update.version.needs-update] */
+	it("needsUpdate returns object with needsUpdate, currentVersion, latestVersion", () => {
+		init({ cwd: TEST_DIR })
+
+		// Modify to have old version
+		const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+		writeFileSync(livespecMdPath, "<!-- livespec-version: 0.0.1 -->\n# Old")
+
+		const result = needsUpdate(TEST_DIR)
+
+		expect(result).toHaveProperty("needsUpdate")
+		expect(result).toHaveProperty("currentVersion")
+		expect(result).toHaveProperty("latestVersion")
+		expect(result.needsUpdate).toBe(true)
+		expect(result.currentVersion).toBe("0.0.1")
+	})
+
+	/** @spec [LIV.update.version.current] */
+	it("needsUpdate returns false when versions match", () => {
+		init({ cwd: TEST_DIR })
+
+		// File was just created with current version
+		const result = needsUpdate(TEST_DIR)
+
+		expect(result.needsUpdate).toBe(false)
+	})
+
+	/** @spec [LIV.update.version.needs-update] */
+	it("needsUpdate returns true when currentVersion is null", () => {
+		init({ cwd: TEST_DIR })
+
+		// Remove version comment
+		const livespecMdPath = join(TEST_DIR, "livespec/livespec.md")
+		writeFileSync(livespecMdPath, "# No version comment")
+
+		const result = needsUpdate(TEST_DIR)
+
+		expect(result.needsUpdate).toBe(true)
+		expect(result.currentVersion).toBeNull()
 	})
 })

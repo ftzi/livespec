@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test"
-import { existsSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { detectInstalledTools, init, updateBaseFiles } from "../init"
 import { cleanupTestDir, setupTestDir, TEST_DIR } from "../test-utils"
@@ -17,6 +17,13 @@ describe("multiple tools", () => {
 		expect(existsSync(join(TEST_DIR, ".github/prompts/livespec.prompt.md"))).toBe(true)
 		expect(existsSync(join(TEST_DIR, ".cursor/prompts/livespec.md"))).toBe(true)
 		expect(existsSync(join(TEST_DIR, ".windsurf/workflows/livespec.md"))).toBe(true)
+	})
+
+	/** @spec [LIV.init.tools.claude] */
+	it("creates command file for Claude", () => {
+		init({ cwd: TEST_DIR, tools: ["claude"] })
+
+		expect(existsSync(join(TEST_DIR, ".claude/commands/livespec.md"))).toBe(true)
 	})
 
 	it("all command files have the same content", () => {
@@ -145,6 +152,20 @@ describe("updateBaseFiles with tools", () => {
 		expect(content).toContain("Livespec")
 		expect(content).not.toContain("# Old content")
 		expect(result.updated).toContain(commandPath)
+	})
+
+	/** @spec [LIV.update.tools.create] */
+	it("creates missing tool command file", () => {
+		init({ cwd: TEST_DIR, tools: ["claude"] })
+
+		// Delete the command file
+		const commandPath = join(TEST_DIR, ".claude/commands/livespec.md")
+		rmSync(commandPath)
+
+		const result = updateBaseFiles({ cwd: TEST_DIR, tools: ["claude"] })
+
+		expect(existsSync(commandPath)).toBe(true)
+		expect(result.created).toContain(commandPath)
 	})
 
 	/** @spec [LIV.update.tools.skip] */

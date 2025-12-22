@@ -28,6 +28,7 @@ These represent hard-learned lessons and project-critical requirements.
 <!-- LIVESPEC:END -->
 
 
+
 **Keyword Usage:** When writing or updating specification files, CLAUDE.md, project.md, or other instructional files, use **MUST** and **NEVER** keywords to enforce critical requirements. These keywords signal mandatory behavior that AI agents must follow without exception.
 
 **Important:** If you discover any information in this file that is no longer accurate or has become outdated, please update it immediately to reflect the current state of the codebase.
