@@ -3,10 +3,9 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/ftzi/livespec/main/assets/logo.svg" width="400" alt="Livespec logo">
 </p>
-<br/>
 <p align="center">
-  <strong>Living specs for AI-native development.</strong><br>
-  Where business rules and code stay in sync.
+  <strong>Specs in sync with code and tests.</strong><br>
+  Next-gen AI-native development.
 </p>
 
 <p align="center">
@@ -20,13 +19,13 @@
 
 **Specs that prove themselves.**
 
-Traditional docs live in external tools, get stale the moment they're written, and the effort to maintain them is wasted. Tests might exist but verifying they cover all expected behaviors is manual and impractical.
+Project documentation in tools like Notion lives disconnected from the actual code, and gets stale the moment it's written. Without documented behaviors, there's no way to verify tests cover everything they should. Even if all behaviors were documented, manually ensuring test coverage for each would be impractical. Other AI spec tools rely on complex and rigid workflows with multiple commands, and soon enough no longer represent actual code as you won't always use their processes.
 
-Livespec brings Spec-Driven Development (SDD) with Behavior-Driven Development (BDD) scenarios to AI coding. Every behavior is a spec. Every spec has tests linked with `@spec` tags. **One command — `/livespec` — finds and fixes specs without tests, features without specs, and drift between code and specs**, guiding you through decisions when needed.
+Livespec brings Spec-Driven Development (SDD) with Behavior-Driven Development (BDD) scenarios to AI coding, while keeping specs, code, and tests in sync. Every behavior in your project is a spec. Every spec has tests linked with `@spec` tags. Your AI plans complex tasks, writes specs, code, and tests. Linked tests prove specs are valid.
 
-Your AI writes plans for complex tasks, specs, code, and tests. You approve. The system proves they work.
+**One command: `/livespec` finds and fixes specs without tests, features without specs, and drift between code and specs**, guiding you through decisions when needed and bringing important insights about your project. Coded something yourself? `/livespec` catches up.
 
-**Designed for both humans and AI.** Just naturally talk to your AI. No complex workflows, commands, or config to learn. Coded something yourself? `/livespec` catches up, or your AI updates specs when it notices drift.
+**Designed for both humans and AI.** Just naturally talk to your AI to add or change features. No complex workflows or config to learn. Plans are automatically created for non-trivial tasks.
 
 **Specs are also AI context.** No need to re-explain what's already documented. Specs get automatically updated if info is outdated or missing.
 
@@ -79,7 +78,7 @@ Now just naturally ask your AI to build features. It will create feature plans f
 
 ```
 livespec/
-├── livespec.md              # AI instructions
+├── livespec.md              # Livespec conventions & workflows for AI
 ├── projects/
 │   └── my-app/
 │       ├── project.md       # Domain knowledge, conventions
