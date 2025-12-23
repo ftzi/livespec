@@ -12,9 +12,9 @@ All created files come from templates in the `templates/` directory. This allows
 
 When `skipExisting: true` (the default), existing files are preserved. This prevents accidentally overwriting user customizations.
 
-### Injection into Existing Files
+### Create or Inject
 
-CLAUDE.md and AGENTS.md injection only works on existing files — livespec won't create these files. This respects that these are user-owned files.
+CLAUDE.md and AGENTS.md are created if they don't exist, or the livespec section is injected into existing files. This ensures all projects have proper AI agent instructions.
 
 ---
 
@@ -120,12 +120,12 @@ Injects livespec section into CLAUDE.md or AGENTS.md.
 - THEN file is not modified
 - AND result.skipped includes the file path
 
-### Scenario: Skip injection when file doesn't exist [LIV.init.injection.no-file]
+### Scenario: Create file when doesn't exist [LIV.init.injection.create]
 
 - WHEN injectClaudeMd: true
 - AND CLAUDE.md does not exist
-- THEN no file is created
-- AND result.skipped includes the file path
+- THEN CLAUDE.md is created with livespec section
+- AND result.created includes the file path
 
 ### Scenario: Inject into AGENTS.md [LIV.init.injection.agents]
 

@@ -9,11 +9,15 @@ describe("root CLAUDE.md injection", () => {
 	beforeEach(setupTestDir)
 	afterEach(cleanupTestDir)
 
-	/** @spec [LIV.init.injection.no-file] */
-	it("skips CLAUDE.md if it does not exist", () => {
+	/** @spec [LIV.init.injection.create] */
+	it("creates CLAUDE.md if it does not exist", () => {
 		const result = init({ cwd: TEST_DIR, injectClaudeMd: true })
-		expect(existsSync(join(TEST_DIR, "CLAUDE.md"))).toBe(false)
-		expect(result.skipped).toContain(join(TEST_DIR, "CLAUDE.md"))
+		expect(existsSync(join(TEST_DIR, "CLAUDE.md"))).toBe(true)
+		const content = readFileSync(join(TEST_DIR, "CLAUDE.md"), "utf-8")
+		expect(content).toContain("<!-- LIVESPEC:START -->")
+		expect(content).toContain("<!-- LIVESPEC:END -->")
+		expect(content).toContain("# Livespec")
+		expect(result.created).toContain(join(TEST_DIR, "CLAUDE.md"))
 	})
 
 	/** @spec [LIV.init.injection.prepend] */
@@ -89,11 +93,15 @@ describe("root AGENTS.md injection", () => {
 	beforeEach(setupTestDir)
 	afterEach(cleanupTestDir)
 
-	/** @spec [LIV.init.injection.no-file] */
-	it("skips root AGENTS.md if it does not exist", () => {
+	/** @spec [LIV.init.injection.create] */
+	it("creates AGENTS.md if it does not exist", () => {
 		const result = init({ cwd: TEST_DIR, injectAgentsMd: true })
-		expect(existsSync(join(TEST_DIR, "AGENTS.md"))).toBe(false)
-		expect(result.skipped).toContain(join(TEST_DIR, "AGENTS.md"))
+		expect(existsSync(join(TEST_DIR, "AGENTS.md"))).toBe(true)
+		const content = readFileSync(join(TEST_DIR, "AGENTS.md"), "utf-8")
+		expect(content).toContain("<!-- LIVESPEC:START -->")
+		expect(content).toContain("<!-- LIVESPEC:END -->")
+		expect(content).toContain("# Livespec")
+		expect(result.created).toContain(join(TEST_DIR, "AGENTS.md"))
 	})
 
 	/** @spec [LIV.init.injection.agents] */

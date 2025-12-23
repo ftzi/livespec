@@ -1,6 +1,6 @@
 {
 	"name": "livespec",
-	"version": "1.0.9",
+	"version": "1.0.10",
 	"description": "Living specification framework for AI-native development",
 	"repository": {
 		"url": "https://github.com/ftzi/livespec"

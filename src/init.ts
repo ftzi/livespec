@@ -188,45 +188,56 @@ function writeFileIfNotExists({ filePath, content, skipExisting, result }: Write
 	}
 }
 
+type InjectIntoExistingOptions = {
+	filePath: string
+	livespecSection: string
+	result: InitResult
+}
+
+function injectIntoExistingFile({ filePath, livespecSection, result }: InjectIntoExistingOptions): void {
+	let content = readFileSync(filePath, "utf-8")
+
+	if (content.includes(LIVESPEC_START_MARKER)) {
+		const startIndex = content.indexOf(LIVESPEC_START_MARKER)
+		const endIndex = content.indexOf(LIVESPEC_END_MARKER)
+
+		if (startIndex !== -1 && endIndex !== -1) {
+			content = content.slice(0, startIndex) + livespecSection + content.slice(endIndex + LIVESPEC_END_MARKER.length)
+			writeFileSync(filePath, content, "utf-8")
+			result.updated.push(filePath)
+		}
+	} else {
+		content = `${livespecSection}\n\n${content}`
+		writeFileSync(filePath, content, "utf-8")
+		result.updated.push(filePath)
+	}
+}
+
 function injectLivespecSection({ filePath, skipExisting, result }: InjectSectionOptions): void {
 	const livespecSection = readTemplate("AGENTS-SECTION.md")
 
-	if (existsSync(filePath)) {
-		if (skipExisting) {
-			const content = readFileSync(filePath, "utf-8")
-			if (content.includes(LIVESPEC_START_MARKER)) {
-				result.skipped.push(filePath)
-				return
-			}
-		}
-
+	if (!existsSync(filePath)) {
 		try {
-			let content = readFileSync(filePath, "utf-8")
-
-			if (content.includes(LIVESPEC_START_MARKER)) {
-				// Replace existing section
-				const startIndex = content.indexOf(LIVESPEC_START_MARKER)
-				const endIndex = content.indexOf(LIVESPEC_END_MARKER)
-
-				if (startIndex !== -1 && endIndex !== -1) {
-					content =
-						content.slice(0, startIndex) + livespecSection + content.slice(endIndex + LIVESPEC_END_MARKER.length)
-					writeFileSync(filePath, content, "utf-8")
-					result.updated.push(filePath)
-				}
-			} else {
-				// Prepend livespec section
-				content = `${livespecSection}\n\n${content}`
-				writeFileSync(filePath, content, "utf-8")
-				result.updated.push(filePath)
-			}
+			writeFileSync(filePath, livespecSection, "utf-8")
+			result.created.push(filePath)
 		} catch (_error) {
-			result.errors.push(`Failed to update: ${filePath}`)
+			result.errors.push(`Failed to create: ${filePath}`)
 		}
-	} else {
-		// File doesn't exist - don't create it, just skip
-		// (we only inject into existing files)
-		result.skipped.push(filePath)
+		return
+	}
+
+	if (skipExisting) {
+		const content = readFileSync(filePath, "utf-8")
+		if (content.includes(LIVESPEC_START_MARKER)) {
+			result.skipped.push(filePath)
+			return
+		}
+	}
+
+	try {
+		injectIntoExistingFile({ filePath, livespecSection, result })
+	} catch (_error) {
+		result.errors.push(`Failed to update: ${filePath}`)
 	}
 }
 
