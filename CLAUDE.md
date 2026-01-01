@@ -8,7 +8,7 @@ This project uses **[Livespec](https://github.com/ftzi/livespec)** for living sp
 
 ## Understanding Keywords
 
-This document uses keywords to indicate requirement severity:
+This and other documents use keywords to indicate requirement severity:
 
 - **MUST** — Mandatory. No exceptions. Violations cause issues.
 - **NEVER** — Prohibited. Will cause problems or break functionality.
